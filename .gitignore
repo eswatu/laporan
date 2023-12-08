@@ -1,0 +1,5 @@
+# ignore server
+/server/node_modules/*
+
+# ignore client
+/client/node_modules/*
