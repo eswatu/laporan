@@ -21,12 +21,12 @@ function updateSchema (req: Request, res: Response, next: NextFunction): void {
   validateRequest(req, next, schema)
 }
 
-async function createDoc (req: Request, res: Response, next: NextFunction):void {
+async function createDoc (req: Request, res: Response, next: NextFunction): void {
   try {
     if (req.body === null) res.status(400).json({ message: 'bad Request' })
-        await documentService.createDoc(req.body)
-        if (response.success) {
-        res.status(201).json({
+    await documentService.createDoc(req.body)
+    if (response.success) {
+      res.status(201).json({
         success: true, message: response.statusMessage, result: response.result
       })
     }
