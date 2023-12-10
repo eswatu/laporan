@@ -1,9 +1,9 @@
-import { type NextFunction, Router as router, response } from 'express'
-import { Joi, type ObjectSchema } from 'joi'
+import express, { Router as router } from 'express'
+import Joi, { type ObjectSchema } from 'joi'
 import { validateRequest } from '../_middleware/validate-request'
 import * as documentService from '../services/document.services'
 
-function createSchema (req: Request, res: Response, next: NextFunction): void {
+function createSchema (req: express.Request, res: express.Response, next: express.NextFunction): void {
   const schema: ObjectSchema = Joi.object({
     dok_number: Joi.string().required(),
     dok_date: Joi.date().required(),
@@ -12,7 +12,7 @@ function createSchema (req: Request, res: Response, next: NextFunction): void {
   validateRequest(req, next, schema)
 }
 
-function updateSchema (req: Request, res: Response, next: NextFunction): void {
+function updateSchema (req: express.Request, res: express.Response, next: express.NextFunction): void {
   const schema: ObjectSchema = Joi.object({
     dok_number: Joi.string().required(),
     dok_date: Joi.date().required(),
@@ -21,10 +21,10 @@ function updateSchema (req: Request, res: Response, next: NextFunction): void {
   validateRequest(req, next, schema)
 }
 
-async function createDoc (req: Request, res: Response, next: NextFunction): void {
+export async function createDoc (req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
   try {
     if (req.body === null) res.status(400).json({ message: 'bad Request' })
-    await documentService.createDoc(req.body)
+    const response = await documentService.createDoc(req.body)
     if (response.success) {
       res.status(201).json({
         success: true, message: response.statusMessage, result: response.result

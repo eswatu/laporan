@@ -2,13 +2,15 @@
   "name": "laporan",
   "version": "1.0.0",
   "description": "aplikasi untuk melihat foto dan uraian laporan ",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "nodemon index.js"
+    "test": "nodemon index.ts"
   },
   "author": "jk",
   "license": "MIT",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.6",
+    "@types/cors": "^2.8.17",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -27,6 +29,8 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-n": "^16.3.1",
     "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }

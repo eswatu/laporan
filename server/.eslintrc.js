@@ -21,5 +21,6 @@ module.exports = {
         "ecmaVersion": "latest"
     },
     "rules": {
+        "semicolon": [true, "always"]
     }
 }
