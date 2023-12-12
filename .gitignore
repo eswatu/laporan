@@ -1,5 +1,5 @@
 # ignore server
-/server/node_modules/*
+/node_modules/*
 /server/config.json
 
 # ignore client

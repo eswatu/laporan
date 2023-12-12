@@ -6,7 +6,7 @@ enum ErrorNames {
   UnauthorizedError = 'UnauthorizedError',
 }
 
-export function errorHandler (err: any, req: Request, res: Response, _next: NextFunction): Response {
+export function errorHandler (err: any, res: Response, _next: NextFunction): Response {
   let statusCode // declare variable outside statement
   switch (true) {
     case typeof err === 'string':
