@@ -1,6 +1,6 @@
 # ignore server
 /node_modules/*
 /server/config.json
-
+/server/node_modules/*
 # ignore client
 /client/node_modules/*

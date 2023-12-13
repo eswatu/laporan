@@ -18,7 +18,7 @@ async function getAllDocs(req, res, next) {
   try {
     console.log('i called get all docs');
     const docs = await documentService.getAllDocs();
-    res.status(200).json({ docs });
+    res.status(200).json(docs);
   } catch (error) {
     next(error);
   }
@@ -55,9 +55,51 @@ function updateDocbyId(req: express.Request, res: express.Response, next:express
    next(error)
   }
 }
-
+// create item by pushing in array
+function createItemForDoc(req: express.Request, res: express.Response, next:express.NextFunction) {
+  try {
+    console.log('id isinya: ', req.params.id)
+    console.log('body isinya: ', req.body)
+    if (req.params.id === undefined) {
+      throw new Error('ID is required')
+    }
+    documentService.createItemForDoc(req.params.id, req.body).then(r => res.json(r)).catch(next)
+  } catch (error) {
+    // console.error(error);
+    next(error)
+  }
+}
+// update one item using item id by passing parameter from doc id
+function updateItemInDoc(req: express.Request, res: express.Response, next:express.NextFunction) {
+  try {
+    if (req.params.id === undefined) {
+      throw new Error('ID is required')
+    }
+    documentService.updateItemForDoc(req.params.id, req.body).then(r => res.json(r)).catch(next)
+  } catch (error) {
+    // console.error(error);
+    next(error)
+  }
+}
+// delete an item using id
+function deleteItemById(req: express.Request, res: express.Response, next:express.NextFunction) {
+  try {
+    if (req.params.id === undefined) {
+      throw new Error('ID is required')
+    }
+    documentService.deleteItemId(req.params.id).then(r => res.json(r)).catch(next)
+  } catch (error) {
+    // console.error(error);
+    next(error)
+  }
+}
+// router doc
 router.get('/', getAllDocs);
 router.get('/:id', getDocById);
 router.post('/', validateBody, createDoc);
 router.put('/:id', validateBody, updateDocbyId);
+// router item
+router.post('/item/:id', createItemForDoc)
+router.put('/item/:id', updateItemInDoc)
+router.delete('/item/:id', deleteItemById)
 export default router;

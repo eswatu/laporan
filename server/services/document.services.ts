@@ -54,23 +54,45 @@ export async function updateDoc (id: string, data: any): Promise<any> {
 
 // Create dan Update untuk item
 // create item
-export async function createItemForDoc (id: string, item: any): Promise<any> {
+export async function createItemForDoc (id, item) {
   try {
-    // create new item
-    const newItem = new item({
-      item_kode: item.item_kode,
-      item_uraian: item.item_uraian,
-      item_nama: item.item_nama,
-      item_files: [{}]
-    })
     // save item to docs
     const doc = await documents.updateOne(
       { _id: id },
       {
-        $push: { dok_item: newItem }
+        $push: { dok_item: item }
       }
     )
     if (doc.modifiedCount !== 0) { return doc }
+  } catch (error) {
+    // console.error(error);
+    return error
+  }
+}
+// update one item using item id by passing parameter from doc id
+// di bagian client nanti jangan lupa konversi _id menjadi id
+export async function updateItemForDoc(id, item) {
+  try {
+    // save item to docs
+    const doc = await documents.updateOne(
+      { "dok_item._id" : item.id },
+      { $set: { "dok_item.$.item_kode": item.item_kode,
+                "dok_item.$.item_uraian": item.item_uraian,
+                "dok_item.$.item_catatan": item.item_catatan } }
+    )
+    console.log('i updated: ', doc)
+    if (doc.modifiedCount !== 0) { return doc }
+  } catch (error) {
+    // console.error(error);
+    return error
+  }
+}
+// delete item using specified id
+export async function deleteItemId (id) {
+  try {
+    const doc = await documents.updateOne(
+      { },
+      { $pull: {"dok_item" : { _id : id }}})
   } catch (error) {
     // console.error(error);
     return error
