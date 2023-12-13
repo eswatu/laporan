@@ -1,55 +1,50 @@
-import express, { Router } from 'express'
-import Joi, { type ObjectSchema } from 'joi'
-import { validateRequest } from '../_middleware/validate-request'
+import express from 'express'
+import Joi from 'joi'
 import * as documentService from '../services/document.services'
+import { validateRequest } from '../_middleware/validate-request'
 
-const router = express.Router()
+const router = express.Router();
 
-function checkNullBody(req: express.Request) {
-  if (req.body === null) throw new Error('bad Request')
-}
-
-function createSchema (req: express.Request, next: express.NextFunction) {
-  const schema: ObjectSchema = Joi.object({
+function validateBody (req:express.Request, res: express.Response, next:express.NextFunction) {
+  const schema = Joi.object({
     dok_number: Joi.string().required(),
     dok_date: Joi.date().required(),
     dok_name: Joi.string().required()
-  })
+  });
   validateRequest(req, next, schema)
 }
 
-function updateSchema (req: express.Request, next: express.NextFunction) {
-  const schema: ObjectSchema = Joi.object({
-    dok_number: Joi.string().required(),
-    dok_date: Joi.date().required(),
-    dok_name: Joi.string().required()
-  })
-  validateRequest(req, next, schema)
+async function getAllDocs(req, res, next) {
+  try {
+    console.log('i called get all docs');
+    const docs = await documentService.getAllDocs();
+    res.status(200).json({ docs });
+  } catch (error) {
+    next(error);
+  }
 }
-function getAllDocs(req, res, next) {
-  console.log('i called ')
-  documentService.getAllDocs().then(al => res.json(al)).catch(next)
-}
-function getDocById(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function getDocById(req: express.Request, res: express.Response, next: express.NextFunction) {
   try {
     if (typeof req.params.id === 'undefined') {
       throw new Error('ID is required')
     }
-    documentService.getDocById(req.params.id).then(r => res.json(r)).catch(next)
+    const doc = await documentService.getDocById(req.params.id)
+    res.status(200).json(doc)
   } catch (error) {
     next(error)
   }
 }
-function createDoc (req: express.Request, res: express.Response, next: express.NextFunction) {
+async function createDoc (req, res, next) {
+  console.log('create called')
+  console.log('body isinya ', req.body)
   try {
-    checkNullBody(req)
-    documentService.createDoc(req.body).then(r => res.json(r)).catch(next)
+    const doc = await documentService.createDoc(req.body)
+    res.status(200).json({doc})
   } catch (error) {
     next(error)
   }
 }
 function updateDocbyId(req: express.Request, res: express.Response, next:express.NextFunction) {
-  checkNullBody(req)
   try {
     if (typeof req.params.id === 'undefined') {
       throw new Error('ID is required')
@@ -61,9 +56,8 @@ function updateDocbyId(req: express.Request, res: express.Response, next:express
   }
 }
 
-router.get('/', getAllDocs)
-router.get('/:id', getDocById)
-router.post('/', createSchema, createDoc)
-router.put('/:id', updateSchema, updateDocbyId)
-
-module.exports = router
+router.get('/', getAllDocs);
+router.get('/:id', getDocById);
+router.post('/', validateBody, createDoc);
+router.put('/:id', validateBody, updateDocbyId);
+export default router;

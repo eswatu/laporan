@@ -1,4 +1,4 @@
-import { Document as documents, Item } from '../model/document'
+import { Document as documents, ItemSchema as item } from '../model/document'
 
 export async function getAllDocs () {
   const docs = await documents.find()
@@ -17,7 +17,7 @@ export async function getDocById (id: string) {
 }
 
 // create document using data object
-export async function createDoc (data: any) {
+export async function createDoc (data) {
   try {
     const doc = new documents({
       dok_number: data.dok_number,
@@ -57,7 +57,7 @@ export async function updateDoc (id: string, data: any): Promise<any> {
 export async function createItemForDoc (id: string, item: any): Promise<any> {
   try {
     // create new item
-    const newItem = new Item({
+    const newItem = new item({
       item_kode: item.item_kode,
       item_uraian: item.item_uraian,
       item_nama: item.item_nama,

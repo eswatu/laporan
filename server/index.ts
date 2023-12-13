@@ -1,34 +1,28 @@
 import express from 'express'
-// import http from 'http';
-// import { bodyParser } from "body-parser";
 import cors from 'cors';
 import mongoose from "mongoose";
 import { errorHandler } from './_middleware/error-handler';
-
+const bodyParser = require("body-parser");
 // imprt via
-const app = express();
 const configset = require('./config.json');
-const cookieParser = require('cookie-parser');
-const documentController = require('./controllers/document.controller')
-const port = configset.server.port;
+import documentRoutes from './controllers/document.controller'
+const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-// router
-app.use('/doc', documentController);
 // middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true
 }));
-app.use(express.urlencoded({ extended: true }),
-        express.json(),
-        cookieParser(),
-        errorHandler);
+// router
+app.use('/doc', documentRoutes);
+
+
+app.use(errorHandler);
 
 // dabatase
 mongoose.Promise = Promise
-mongoose.connect(configset.connectionString); 
+mongoose.connect(configset.connectionString);
 mongoose.connection.on('connected', () => {
     console.log('connected to server')
 })
@@ -39,7 +33,6 @@ mongoose.connection.on('error', () => {
     console.log('error')
 })
 
-const server = app.listen(port, () => {
-    const address = server.address();
-    console.log(`server listen to ${JSON.stringify(address)}`)
+app.listen(configset.server.port, () => {
+    console.log(`server listen to http://localhost:${configset.server.port}`)
 })
