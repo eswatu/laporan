@@ -1,0 +1,7 @@
+{
+    "connectionString": "mongodb+srv://iceboltz:123654789@cluster0.zcrbfgq.mongodb.net/laporan",
+    "secret": "token",
+    "server": {
+        "port": 4000
+    }
+}

@@ -1,5 +1,6 @@
 import { Document as documents, ItemSchema as item } from '../model/document'
 
+
 export async function getAllDocs () {
   const docs = await documents.find()
   if (!docs) {
@@ -98,4 +99,3 @@ export async function deleteItemId (id) {
     return error
   }
 }
-
