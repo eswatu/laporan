@@ -7,7 +7,7 @@ import { format } from 'util'
 import { Storage } from '@google-cloud/storage'
 // instantiate storage with credential
 const storage = new Storage({keyFilename: 'credentials.json'})
-const bucket = storage.bucket('')
+const bucket = storage.bucket('dok-laporan')
 
 const router = express.Router();
 
@@ -120,7 +120,7 @@ export async function uploadFile(req, res, next) {
       try {
         await bucket.file(req.file.originalname).makePublic()
       } catch {
-        return res.status(500).send({message: 'Uploaded file successfully: ${req.file.originalname}, but public access is denied',
+        return res.status(500).send({message: `Uploaded file successfully: ${req.file.originalname}, but public access is denied`,
       url: publicUrl})
       }
 
@@ -133,7 +133,7 @@ export async function uploadFile(req, res, next) {
       })
     }
     res.status(500).send({
-      message: 'Could not upload the file: ${req.file.originalname}. ${error}',
+      message: `Could not upload the file: ${req.file.originalname}. ${error}`,
     })
   }
 }
