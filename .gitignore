@@ -1,5 +1,6 @@
 # ignore server
 server/config.json
+server/gkey.json
 server/node_modules/*
 # ignore client
 client/node_modules/*

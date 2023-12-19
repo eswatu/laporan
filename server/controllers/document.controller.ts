@@ -2,15 +2,12 @@ import express from 'express'
 import Joi from 'joi'
 import * as documentService from '../services/document.services'
 import { validateRequest } from '../_middleware/validate-request'
-import { processFile } from '../_middleware/filetransfer';
+import { processFileMiddleware as processFile } from '../_middleware/filetransfer';
 import { format } from 'util'
 import { Storage } from '@google-cloud/storage'
-// instantiate storage with credential
-const storage = new Storage({keyFilename: 'credentials.json'})
-const bucket = storage.bucket('dok-laporan')
+import { read } from 'fs';
 
 const router = express.Router();
-
 function validateBody (req:express.Request, res: express.Response, next:express.NextFunction) {
   const schema = Joi.object({
     dok_number: Joi.string().required(),
@@ -64,8 +61,8 @@ function updateDocbyId(req: express.Request, res: express.Response, next:express
 // create item by pushing in array
 function createItemForDoc(req: express.Request, res: express.Response, next:express.NextFunction) {
   try {
-    console.log('id isinya: ', req.params.id)
-    console.log('body isinya: ', req.body)
+    // console.log('id isinya: ', req.params.id)
+    // console.log('body isinya: ', req.body)
     if (req.params.id === undefined) {
       throw new Error('ID is required')
     }
@@ -101,29 +98,38 @@ function deleteItemById(req: express.Request, res: express.Response, next:expres
 }
 
 // File handling
-
-export async function uploadFile(req, res, next) {
+// instantiate storage with credential
+const storage = new Storage({keyFilename: 'gkey.json'})
+const bucketName = "dok-laporan"
+// uplload file pake nomor id dokumen dan id item
+export async function uploadFile(req, res) {
+  const bucket = storage.bucket(bucketName);
   try {
+    // console.log(req)
     await processFile(req, res)
-    if (!req['file']) {
-      return res.status(400).send({message:'File not found'})
+    // check if file exists
+    if (!req.file) {
+      return res.status(400).send({message:'File tidak ada '})
     }
-    // create blob di bucket, lalu upload
-    const blob = bucket.file(req.file.originalname)
+    const fname  = (await documentService.getDocById(req.params.docnum)).dok_number! as string + '-' + req.params.itemid + '-' + req.file.originalname;
+    const blob = bucket.file(fname)
     const blobStream = blob.createWriteStream({resumable:false})
+    // watch event
     blobStream.on("error", (err) => {
       res.status(500).send({message: err.message})
     })
     blobStream.on("finish", async (data) => {
       // create url for direct access via http
       const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`)
+      // make file public
       try {
-        await bucket.file(req.file.originalname).makePublic()
+        // await storage.bucket(bucketName).makePublic().then( async () => {
+        await storage.bucket(bucketName).file(req.file.originalname).makePublic().catch(console.error)
       } catch {
         return res.status(500).send({message: `Uploaded file successfully: ${req.file.originalname}, but public access is denied`,
       url: publicUrl})
       }
-
+      return res.status(200).send({message: "upload berhasil: "+ req.file.originalname, url: publicUrl})
     })
     blobStream.end(req.file.buffer)
   } catch (error) {
@@ -137,7 +143,9 @@ export async function uploadFile(req, res, next) {
     })
   }
 }
-export async function downloadFile(req, res, next) {
+export async function downloadFile(req, res) {
+  // sementara
+  const bucket = storage.bucket("bbb")
   try {
     const [metaData] = await bucket.file(req.params.name).getMetadata()
     res.redirect(metaData.mediaLink)
@@ -147,9 +155,13 @@ export async function downloadFile(req, res, next) {
     })
   }
 }
-export async function getFileList(req,res,next) {
+export async function getFileList(req,res) {
+    // sementara
+    const bucket = storage.bucket(bucketName)
   try {
-    const [files] = await bucket.getFiles()
+    const q = ((await documentService.getDocById(req.params.docnum)).dok_number!) + '-' + req.params.itemid;
+    console.log('will search for ',q)
+    const [files] = await bucket.getFiles({prefix:q})
     let fileInfos = []
     files.forEach((file) => {
       fileInfos.push({
@@ -173,4 +185,9 @@ router.put('/:id', validateBody, updateDocbyId);
 router.post('/item/:id', createItemForDoc)
 router.put('/item/:id', updateItemInDoc)
 router.delete('/item/:id', deleteItemById)
+// router file
+// id ini berisi id dari item, nanti akan diambil nomor dokumen untuk nama bucket
+router.post('/upload/:docnum/:itemid', uploadFile)
+router.get('/download/:name', downloadFile)
+router.get('/files/:docnum/:itemid', getFileList)
 export default router;
