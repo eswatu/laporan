@@ -5,9 +5,10 @@ import { validateRequest } from '../_middleware/validate-request'
 import { processFileMiddleware as processFile } from '../_middleware/filetransfer';
 import { format } from 'util'
 import { Storage } from '@google-cloud/storage'
-import { read } from 'fs';
+import ShortUniqueId from 'short-unique-id'
 
 const router = express.Router();
+
 function validateBody (req:express.Request, res: express.Response, next:express.NextFunction) {
   const schema = Joi.object({
     dok_number: Joi.string().required(),
@@ -96,6 +97,7 @@ function deleteItemById(req: express.Request, res: express.Response, next:expres
     next(error)
   }
 }
+// CRUD file item
 
 // File handling
 // instantiate storage with credential
@@ -111,7 +113,10 @@ export async function uploadFile(req, res) {
     if (!req.file) {
       return res.status(400).send({message:'File tidak ada '})
     }
-    const fname  = (await documentService.getDocById(req.params.docnum)).dok_number! as string + '-' + req.params.itemid + '-' + req.file.originalname;
+    const uid = new ShortUniqueId({length: 10})
+    const fname  = (await documentService.getDocById(req.params.docnum)).dok_number! as string + '-' + req.params.itemid + '-' + uid.rnd(8) + '-' + req.file.originalname.replace(/\s/g, '');
+    // console.log(fname)
+    // transfer fname ke data item
     const blob = bucket.file(fname)
     const blobStream = blob.createWriteStream({resumable:false})
     // watch event
@@ -123,13 +128,20 @@ export async function uploadFile(req, res) {
       const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`)
       // make file public
       try {
-        // await storage.bucket(bucketName).makePublic().then( async () => {
-        await storage.bucket(bucketName).file(req.file.originalname).makePublic().catch(console.error)
+        // make file become public read using acl
+        await storage.bucket(bucketName).file(blob.name).acl.add({
+          entity: 'allUsers', role: storage.acl.READER_ROLE
+        }).catch(console.error)
+        // .makePublic().catch(console.error)
+        // updte ke nama file yang tersimpan di database
+        const newsssss = { fname: fname, fket: req.body.ket}
+        await documentService.addFileItemForDoc( req.params.itemid, newsssss)
+        // .catch(console.error)
+        return res.status(200).send({message: "upload berhasil: "+ req.file.originalname, url: publicUrl})
       } catch {
         return res.status(500).send({message: `Uploaded file successfully: ${req.file.originalname}, but public access is denied`,
       url: publicUrl})
       }
-      return res.status(200).send({message: "upload berhasil: "+ req.file.originalname, url: publicUrl})
     })
     blobStream.end(req.file.buffer)
   } catch (error) {
@@ -145,9 +157,10 @@ export async function uploadFile(req, res) {
 }
 export async function downloadFile(req, res) {
   // sementara
-  const bucket = storage.bucket("bbb")
+  const bucket = storage.bucket(bucketName)
   try {
     const [metaData] = await bucket.file(req.params.name).getMetadata()
+    // console.log(metaData)
     res.redirect(metaData.mediaLink)
   } catch (err) {
     res.status(500).send({
@@ -157,24 +170,7 @@ export async function downloadFile(req, res) {
 }
 export async function getFileList(req,res) {
     // sementara
-    const bucket = storage.bucket(bucketName)
-  try {
-    const q = ((await documentService.getDocById(req.params.docnum)).dok_number!) + '-' + req.params.itemid;
-    console.log('will search for ',q)
-    const [files] = await bucket.getFiles({prefix:q})
-    let fileInfos = []
-    files.forEach((file) => {
-      fileInfos.push({
-        name: file.name, url: file.metadata.mediaLink
-      })
-    })
-    res.status(200).send(fileInfos)
-  } catch (err) {
-    console.log(err)
-    res.status(500).send({
-      message: "unable to read list of files"
-    })
-  }
+  documentService.getAllFileForItem(req.params.docnum, req.params.itemid).then(r => res.json(r)).catch(console.error)
 }
 // router doc
 router.get('/', getAllDocs);

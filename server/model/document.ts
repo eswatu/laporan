@@ -3,10 +3,7 @@ import mongoose from 'mongoose'
 export const ItemDocSchema = new mongoose.Schema({
   file_nama: { type: String, required: true },
   file_keterangan: { type: String, required: false },
-  file_data: { type: String, required: false }
-}, {
-  timestamps: true
-})
+  },{ timestamps: false})
 
 export const ItemSchema = new mongoose.Schema({
   item_kode: { type: String, required: true },

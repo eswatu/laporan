@@ -1,4 +1,6 @@
-import { Document as documents, ItemSchema as item } from '../model/document'
+import mongoose from 'mongoose'
+import { Document as documents, ItemSchema as item, ItemDocSchema as itemFile } from '../model/document'
+import { Storage } from '@google-cloud/storage'
 
 
 export async function getAllDocs () {
@@ -88,6 +90,40 @@ export async function updateItemForDoc(id, item) {
     return error
   }
 }
+// add new file for item
+export async function addFileItemForDoc(itemid, file) {
+  console.log(file)
+  const newFileItem = { file_nama : file.fname, file_keterangan: file.fket}
+  try {
+    // save item to docs
+    const doc = await documents.updateOne(
+      { "dok_item._id" : itemid },
+      { $push: { "dok_item.$.item_files" : newFileItem } }
+    )
+    console.log('new item inserted to ', itemid)
+    if (doc.modifiedCount !== 0) { return doc }
+  } catch (error) {
+    // console.error(error);
+    return error
+  }
+}
+// file for item id
+// belum dites
+export async function deleteFileItemForDoc(item, fname) {
+  try {
+    // save item to docs
+    const doc = await documents.updateOne(
+      { "dok_item._id" : item.id },
+      { $pull: { "dok_item.item_files.file_name": fname } }
+    )
+    console.log('deleted ', fname)
+    if (doc.modifiedCount !== 0) { return doc }
+  } catch (error) {
+    // console.error(error);
+    return error
+  }
+}
+
 // delete item using specified id
 export async function deleteItemId (id) {
   try {
@@ -97,5 +133,31 @@ export async function deleteItemId (id) {
   } catch (error) {
     // console.error(error);
     return error
+  }
+}
+
+// item files CRUD
+// find all file for item id
+// File handling
+// instantiate storage with credential
+const storage = new Storage({keyFilename: 'gkey.json'})
+const bucketName = "dok-laporan"
+export async function getAllFileForItem(docnum, itemid) {
+    // sementara
+    const bucket = storage.bucket(bucketName)
+  try {
+    const q = ((await getDocById(docnum)).dok_number!) + '-' + itemid;
+    console.log('will search for ',q)
+    const [files] = await bucket.getFiles({prefix:q})
+    let fileInfos = []
+    files.forEach((file) => {
+      fileInfos.push({
+        name: file.name, url: file.metadata.mediaLink
+      })
+    })
+    return fileInfos
+  } catch (err) {
+    console.log(err)
+    return { message: "unable to read list of files" }
   }
 }
