@@ -103,6 +103,8 @@ function deleteItemById(req: express.Request, res: express.Response, next:expres
 // instantiate storage with credential
 const storage = new Storage({keyFilename: 'gkey.json'})
 const bucketName = "dok-laporan"
+const bucket = storage.bucket(bucketName);
+
 // uplload file pake nomor id dokumen dan id item
 export async function uploadFile(req, res) {
   const bucket = storage.bucket(bucketName);
@@ -155,13 +157,29 @@ export async function uploadFile(req, res) {
     })
   }
 }
+function getStringAfterLastDot(input: string): string {
+  const lastDotIndex = input.lastIndexOf('.');
+
+  if (lastDotIndex !== -1 && lastDotIndex < input.length - 1) {
+    // Found a dot and it's not the last character
+    return input.substring(lastDotIndex + 1);
+  } else {
+    // No dot found or it's the last character
+    return '';
+  }
+}
 export async function downloadFile(req, res) {
-  // sementara
-  const bucket = storage.bucket(bucketName)
+  const cfile = bucket.file(req.params.name);
   try {
     const [metaData] = await bucket.file(req.params.name).getMetadata()
-    // console.log(metaData)
-    res.redirect(metaData.mediaLink)
+    console.log(metaData)
+    const dfile = await cfile.download();
+    // Set response headers for the file download
+    res.setHeader('Content-Disposition', `attachment; filename=${req.params.name}`);
+    res.setHeader('Content-Type', metaData.contentType);
+
+    // Send the file buffer to the client
+    res.send(dfile[0]);
   } catch (err) {
     res.status(500).send({
       message: 'Could not download file ' + err
