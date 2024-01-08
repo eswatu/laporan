@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { ToolbarModule} from 'primeng/toolbar'
+import { MenuItem } from 'primeng/api/menuitem';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, ToolbarModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'client';
+  lmenus: MenuItem[] = [];
+  ngOnInit() {
+    this.lmenus = [{
+      label:"Home", routerLink: ['/document']
+    }]
+  }
 }
