@@ -3,6 +3,7 @@ import { DocumentListComponent } from './document-list/document-list.component';
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { DocumentRoutingModule } from './document-routing.module';
 import { CommonModule } from '@angular/common';
+import { MaterialsDocumentModule } from './materials-document.module';
 
 
 
@@ -13,6 +14,7 @@ import { CommonModule } from '@angular/common';
   ],
   imports: [
     CommonModule,
+    MaterialsDocumentModule,
     DocumentRoutingModule
   ]
 })

@@ -1,1 +1,24 @@
-HOLA
+<p-table [value]="" [paginator]="'true" [rows]="rows" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 25%;">Nomor Dokumen</th>
+            <th style="width: 25%;">Tanggal Dokumen</th>
+            <th style="width: 25%;">Perusahaan</th>
+            <th style="width: 25%;">Aksi</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-doc>
+        <tr>
+            <td>{{ doc.dok_number }}</td>
+            <td>{{ doc.dok_date }}</td>
+            <td>{{ doc.dok_name}}</td>
+            <td>ubah dan hapus</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-table>
