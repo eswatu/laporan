@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 export class DocumentService extends BaseService {
   url;
-  getData<ApiResult>(page: number, pageSize: number,
-          sortColumn: string, sortorder: 'asc' | 'desc' | '',
+  getData<ApiResult>(pageIndex: number, pageSize: number,
+          sortColumn: string, sortorder: string,
           filterColumn: string, filterQuery: string): Observable<ApiResult> {
             var params = new HttpParams()
-            .set('page', page.toString())
+            .set('pageIndex', pageIndex.toString())
             .set('pageSize', pageSize.toString())
             .set('sortColumn', sortColumn)
             .set('sortOrder', sortorder);
@@ -34,6 +35,6 @@ export class DocumentService extends BaseService {
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);
-    this.url = baseUrl + 'api/doc/';
+    this.url = `${environment.baseUrl}/doc`;
   }
 }

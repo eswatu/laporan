@@ -1,14 +1,9 @@
-import mongoose from 'mongoose'
 import { Document as documents, ItemSchema as item, ItemDocSchema as itemFile } from '../model/document'
 import { Storage } from '@google-cloud/storage'
+import { paginateDoc} from "../_middleware/paginate";
 
-
-export async function getAllDocs () {
-  const docs = await documents.find()
-  if (!docs) {
-    throw new Error('Dokumen tidak ditemukan')
-  }
-  return docs
+export async function getAllDocs (q) {
+  return paginateDoc(documents, q)
 }
 // find document using id string, return document
 export async function getDocById (id: string) {

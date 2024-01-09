@@ -20,8 +20,8 @@ function validateBody (req:express.Request, res: express.Response, next:express.
 
 async function getAllDocs(req, res, next) {
   try {
-    console.log('i called get all docs');
-    const docs = await documentService.getAllDocs();
+    // console.log('i called get all docs');
+    const docs = await documentService.getAllDocs(req.query);
     res.status(200).json(docs);
   } catch (error) {
     next(error);

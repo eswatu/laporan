@@ -1,9 +1,9 @@
-export interface Document {
+export interface Doc {
     id: string;
     dok_number: number;
     dok_date: Date;
     dok_name: string; 
-    dok_item: Item[];
+    dok_item?: Item[];
 }
 
 export interface Item {
@@ -11,7 +11,7 @@ export interface Item {
     item_kode: string;
     item_uraian: string;
     item_catatan: string;
-    item_files: Item_file[];
+    item_files?: Item_file[];
 }
 export interface Item_file {
     id: string;
