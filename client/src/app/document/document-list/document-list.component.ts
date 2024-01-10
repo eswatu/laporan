@@ -64,11 +64,11 @@ getData(event: PageEvent) {
   this.docService.getData<ApiResult<Doc>>(event.page, event.rows,
                       sortColumn, sortOrder, filterColumn, filterQuery).subscribe(result => {
                         this.documents = result.data;
-                        console.log(result);
+                        // console.log(result);
                       })
 }
 openDetil(docid: string) {
   // console.log(id);
-  this.router.navigate(['detil'], {queryParams: {id: docid}});
+  this.router.navigate(['document','detil'], {queryParams: {id: docid}});
 }
 }

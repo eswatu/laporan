@@ -4,7 +4,7 @@ import { DocumentFormComponent } from './document-form/document-form.component';
 import { DocumentRoutingModule } from './document-routing.module';
 import { CommonModule } from '@angular/common';
 import { MaterialsDocumentModule } from './materials-document.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MaterialsDocumentModule,
     DocumentRoutingModule

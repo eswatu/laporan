@@ -24,7 +24,7 @@ export class DocumentService extends BaseService {
                           }
             return this.http.get<ApiResult>(this.url, {params});
   }
-  get<Doc>(id: number): Observable<Doc> {
+  get<Doc>(id: string): Observable<Doc> {
     let myurl = this.url + id;
     return this.http.get<Doc>(myurl);
   }
@@ -36,6 +36,6 @@ export class DocumentService extends BaseService {
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);
-    this.url = `${environment.baseUrl}/doc`;
+    this.url = `${environment.baseUrl}/doc/`;
   }
 }
