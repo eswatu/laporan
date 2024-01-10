@@ -1,0 +1,38 @@
+<form [formGroup]="doc">
+    <div class="group-one">
+        <h3>Data Dokumen</h3>
+        <div class="input1">
+            <label for="dok_number">Nomor Dokumen</label>
+            <input pInputText pKeyFilter="int" placeholder="Nomor Dokumen (angka)" formControlName="dok_number" style="text-align: end;">
+        </div>
+        <div class="input2">
+            <label for="dok_date">Tanggal Dokumen</label>
+            <p-calendar placeholder="Tanggal Dokumen (angka)" formControlName="dok_date" dateFormat="dd-mm-yy"></p-calendar>
+        </div>
+        <div class="input3">
+            <label for="dok_name">Perusahaan</label>
+            <input pInputText placeholder="PT. XXX" formControlName="dok_name">
+        </div>
+    </div>
+    <div class="group-two">
+        <div class="mini-one">
+            <h3>Rincian item</h3>
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newItem()"></p-button>
+        </div>
+        <div class="item" *ngFor="let item of dok_item.controls; let i = index">
+            <h4>item {{ i }}</h4>
+            <form >
+                <label for="item_kode">Nomor item</label>
+                <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;">
+                <label for="item_uraian">Uraian Barang</label>
+                <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian">
+                <label for="item_catatan">Catatan tambahan</label>
+                <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan">
+            </form>
+            <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
+                daftar file {{ j }}
+                <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
+            </div>
+        </div>
+    </div>
+</form>

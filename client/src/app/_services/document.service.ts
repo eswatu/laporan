@@ -24,8 +24,9 @@ export class DocumentService extends BaseService {
                           }
             return this.http.get<ApiResult>(this.url, {params});
   }
-  override get<T>(id: number): Observable<T> {
-    throw new Error('Method not implemented.');
+  get<Doc>(id: number): Observable<Doc> {
+    let myurl = this.url + id;
+    return this.http.get<Doc>(myurl);
   }
   override put<T>(item: T): Observable<T> {
     throw new Error('Method not implemented.');

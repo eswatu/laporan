@@ -15,11 +15,13 @@
             <td>{{ doc.dok_number }}</td>
             <td>{{ doc.dok_date | date:'dd-MM-yyyy'}}</td>
             <td>{{ doc.dok_name}}</td>
-            <td>ubah dan hapus</td>
+            <td>
+                <p-button type="button" styleClass="p-button-text" (click)="openDetil(doc.id)">Edit</p-button>
+            </td>
         </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft">
-        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="showForm()"></p-button>
+        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" routerLink="detil"></p-button>
     </ng-template>
     <ng-template pTemplate="paginatorright">
         <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>

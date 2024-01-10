@@ -3,7 +3,7 @@ import { DocumentService } from '../../_services/document.service';
 import { ApiResult } from '../../_services/base.service';
 import { Doc } from '../../_models/document.interface';
 import { DialogService } from "primeng/dynamicdialog";
-import { DocumentFormComponent } from '../document-form/document-form.component';
+import { Router } from '@angular/router';
 
 interface PageEvent {
   first: number;
@@ -28,7 +28,7 @@ export class DocumentListComponent {
   filterQuery: string = '';
   // document
   documents : Doc[];
-constructor(private docService: DocumentService, private dialogservice: DialogService) {
+constructor(private docService: DocumentService, private router: Router) {
   // this.documents = [
   //   { id:'asa111', dok_number: 1, dok_date: new Date(), dok_name: 'test1', dok_item: [{id: "1", item_kode: 'test1', item_uraian: "item 1", item_catatan: "sesuatu"}]},
   //   { id:'asa222', dok_number: 2, dok_date: new Date(), dok_name: 'test2', dok_item: [{id: "2", item_kode: 'test2', item_uraian: "item a", item_catatan: "sesuatu"}]},
@@ -67,13 +67,8 @@ getData(event: PageEvent) {
                         console.log(result);
                       })
 }
-// untuk komponen lain
-showForm() {
-  const ref = this.dialogservice.open(DocumentFormComponent, {
-    header: 'Input Form',
-    width: '70%',
-    // contentStyle: {"max-height": "500px", "overflow": "auto"},
-  });
+openDetil(docid: string) {
+  // console.log(id);
+  this.router.navigate(['detil'], {queryParams: {id: docid}});
 }
-
 }
