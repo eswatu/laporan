@@ -19,21 +19,19 @@
         <form class="mini-one" formArrayName="dok_item">
             <h3>Rincian item</h3>
             <ng-container class="item" *ngFor="let item of dok_item.controls; let i = index">
-                <!-- <form [formGroup]="dok_item.at(i)"> -->
-                    <form [formGroup]="itemForm">
-                        <h4>item {{ i + 1 }}</h4>
-                        <label for="item_kode">Nomor item</label>
-                        <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;"/>
-                        <label for="item_uraian">Uraian Barang</label>
-                        <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"/>
-                        <label for="item_catatan">Catatan tambahan</label>
-                        <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan"/>
-                        <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
-                            daftar file {{ j }}
-                            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
-                        </div>
-                    </form>
-                <!-- </form> -->
+                <form [formGroup]="itemForm">
+                    <h4>item {{ i + 1 }}</h4>
+                    <label for="item_kode">Nomor item</label>
+                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;"/>
+                    <label for="item_uraian">Uraian Barang</label>
+                    <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"/>
+                    <label for="item_catatan">Catatan tambahan</label>
+                    <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan"/>
+                    <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
+                        daftar file {{ j }}
+                        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
+                    </div>
+                </form>
             </ng-container>
         </form>
     </div>

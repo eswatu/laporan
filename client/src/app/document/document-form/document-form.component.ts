@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentService } from '../../_services/document.service';
 import { Doc, Item } from '../../_models/document.interface';
@@ -23,45 +23,68 @@ export class DocumentFormComponent implements OnInit {
     item_kode: [],
     item_uraian: [],
     item_catatan: [],
-    item_files: this.formBuilder.array([]),
   });
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
     private docService:DocumentService) {
-  }
-  ngOnInit(){
-    this.route.queryParams.subscribe(params => {
-      this.id = params['id'];
-      // console.log(params['id']);
-    });
-    this.loadData();
-  }
-  loadData() {
-    //get data from internet
-    if (this.id) {
-      this.docService.get<Doc>(this.id).subscribe(result => {
-        // console.log(result);
-        this.doc.patchValue({
-          dok_number : result.dok_number,
-          dok_name : result.dok_name,
-          dok_date: new Date(result.dok_date)
-        });
-        result.dok_item.forEach(item => {
-          this.newItem();
-          this.dok_item.at(this.dok_item.length - 1).patchValue({
-            item_kode: item.item_kode,
-            item_uraian: item.item_uraian,
-            item_catatan: item.item_catatan
-          })
-        });
-        this.currentDoc = result;
-      });
     }
+    ngOnInit(){
+      this.loadData();
+      for (let index = 0; index < this.dok_item.length; index++) {
+        const element = this.dok_item.controls[index] as FormGroup;
+        const item = this.currentDoc.dok_item[index];
+        element.patchValue({
+          item_kode: item.item_kode,
+          item_uraian: item.item_uraian,
+          item_catatan: item.item_catatan
+        });
+      };
+    }
+    loadData() {
+      //get data from internet
+      this.route.queryParams.subscribe(params => {
+        this.id = params['id'];
+        // console.log(params['id']);
+        if (this.id) {
+          this.docService.get<Doc>(this.id).subscribe(result => {
+            // console.log(result);
+            this.doc.patchValue({
+              dok_number : result.dok_number,
+              dok_name : result.dok_name,
+              dok_date: new Date(result.dok_date)
+            });
+            // buat form baru, tambahkan data
+            result.dok_item.forEach((value) => {
+              this.newItem();
+            })
+            // store result
+            this.currentDoc = result;
+          });
+        }
+      });
   }
   get dok_item() {
     return this.doc.controls['dok_item'] as FormArray;
   }
-  newItem() {
-    this.dok_item.push(this.itemForm);
+  newItem(item: Item = null) {
+    const newFg = this.newForm();
+    console.log('dari form ', item);
+    this.dok_item.push(newFg);
+    if (item != null) {
+      newFg.patchValue({
+        item_kode: item.item_kode,
+        item_uraian: item.item_uraian,
+        item_catatan: item.item_catatan,
+        item_files: item.item_files
+      });
+    }
+  }
+  newForm(): FormGroup {
+    return this.formBuilder.group({
+      item_kode: [],
+      item_uraian: [],
+      item_catatan: [],
+      item_files: [],
+    });
   }
   getitem_files(index:number) {
     return this.dok_item.at(index).get('item_files') as FormArray;
