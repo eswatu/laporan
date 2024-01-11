@@ -22,7 +22,7 @@
                 <form [formGroup]="itemForm">
                     <h4>item {{ i + 1 }}</h4>
                     <label for="item_kode">Nomor item</label>
-                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;"/>
+                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;" [value]=""/>
                     <label for="item_uraian">Uraian Barang</label>
                     <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"/>
                     <label for="item_catatan">Catatan tambahan</label>
@@ -41,7 +41,7 @@
     <div class="card-header">Form Debug Info</div>
     <div class="card-body">
       <div class="card-text">
-        <div><strong>Form value:</strong></div>
+        <div><strong>Form value: dok_item</strong></div>
         <div class="help-block">
             {{ dok_item.value | json }}
         </div>
