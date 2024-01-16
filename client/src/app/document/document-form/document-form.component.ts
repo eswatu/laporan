@@ -55,16 +55,21 @@ export class DocumentFormComponent implements OnInit {
   get dok_item() {
     return this.doc.controls['dok_item'] as FormArray;
   }
-  newItem(item: Item = null) {
-    const myform = this.formBuilder.group({
-      item_kode: [],
-      item_uraian: [],
-      item_catatan: [],
-      item_files: this.formBuilder.array([item.item_files]),
+  newFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      item_kode: new FormControl(),
+      item_uraian: new FormControl(),
+      item_catatan: new FormControl(),
+      item_files: this.formBuilder.array([]),
     });
+  }
+  newItem(item: Item = null) {
+
+    const myform = this.newFormGroup();
     myform.patchValue(item);
     console.log('dari form ', item);
-    this.dok_item.push(myform);
+    const formArrays = this.dok_item as FormArray;
+    formArrays.push(myform);
   }
   getitem_files(index:number) {
     return this.dok_item.at(index).get('item_files') as FormArray;

@@ -1,37 +1,47 @@
 <form [formGroup]="doc">
     <div class="group-one">
         <h3>Data Dokumen</h3>
-        <div class="input1">
-            <label for="dok_number">Nomor Dokumen</label>
-            <input pInputText pKeyFilter="int" placeholder="Nomor Dokumen (angka)" formControlName="dok_number" style="text-align: end;" id="dok_number">
+        <div class="input1 inputHeader">
+            <label for="dok_number" class="headerLabel">Nomor Dokumen</label>
+            <input pInputText pKeyFilter="int" placeholder="Nomor Dokumen (angka)" formControlName="dok_number"
+            style="text-align: end;" id="dok_number" class="headerInput">
         </div>
-        <div class="input2">
-            <label for="dok_date">Tanggal Dokumen</label>
-            <p-calendar placeholder="Tanggal Dokumen (angka)" formControlName="dok_date" dateFormat="dd-mm-yy" id="dok_date"></p-calendar>
+        <div class="input2 inputHeader">
+            <label for="dok_date" class="headerLabel">Tanggal Dokumen</label>
+            <p-calendar placeholder="Tanggal Dokumen (angka)" inputId="dok_date" formControlName="dok_date"
+            dateFormat="dd-mm-yy" [showButtonBar]="true" class="headerInput"></p-calendar>
         </div>
-        <div class="input3">
-            <label for="dok_name">Perusahaan</label>
-            <input pInputText placeholder="PT. XXX" formControlName="dok_name" id="dok_name">
+        <div class="input3 inputHeader">
+            <label for="dok_name" class="headerLabel">Perusahaan</label>
+            <input pInputText placeholder="PT. XXX" formControlName="dok_name" id="dok_name" class="headerInput">
         </div>
     </div>
     <div class="group-two">
         <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newItem()"></p-button>
-        <form class="mini-one" formArrayName="dok_item">
+        <form class="mini" formArrayName="dok_item">
             <h3>Rincian item</h3>
-            <ng-container class="item" *ngFor="let item of dok_item.controls; let i = index">
-                <form [formGroup]="itemForm">
-                    <h4>item {{ i + 1 }}</h4>
-                    <label for="item_kode">Nomor item</label>
-                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" style="text-align: end;" [value]=""/>
-                    <label for="item_uraian">Uraian Barang</label>
-                    <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"/>
-                    <label for="item_catatan">Catatan tambahan</label>
-                    <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan"/>
+            <ng-container class="item" *ngFor="let item of dok_item.controls; let i = index" [formGroupName]="i">
+                <!-- item-title -->
+                    <h4 class="item-title">item {{ i + 1 }}</h4>
+                <!-- item-label-kode -->
+                    <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
+                <!-- item-input-kode -->
+                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" [id]="'item_kode' + i "
+                    style="text-align: end;" class="item-input-kode"/>
+                <!-- item-label-catatan -->
+                    <label for="{{ 'item_catatan' + i }}" class="item-label-catatan">Catatan tambahan</label>
+                <!-- item-input-catatan -->
+                    <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan"
+                    [id]=" 'item_catatan' + i" class="item-input-catatan"/>
+                <!-- item-label-uraian -->
+                    <label for="{{ 'item_uraian' + i }}" class="item-label-uraian">Uraian Barang</label>
+                <!-- item-input-uraian -->
+                    <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"
+                    [id]=" 'item_uraian' + i" class="item-input-uraian"/>
                     <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
                         daftar file {{ j }}
                         <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
                     </div>
-                </form>
             </ng-container>
         </form>
     </div>
