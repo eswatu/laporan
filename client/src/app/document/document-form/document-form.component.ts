@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentService } from '../../_services/document.service';
 import { Doc, Item } from '../../_models/document.interface';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-document-form',
   templateUrl: './document-form.component.html',
-  styleUrl: './document-form.component.css'
+  styleUrl: './document-form.component.css',
+  providers: [MessageService]
 })
 export class DocumentFormComponent implements OnInit {
   id : string;
@@ -15,20 +17,30 @@ export class DocumentFormComponent implements OnInit {
   // form
   doc : FormGroup;
   itemForm : FormGroup;
-  
+  headerIsEdited: boolean = false;
+  headeriswaiting: boolean = false;
+
+  bodyIsEdited: boolean = false;
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
-    private docService:DocumentService) {
-      this.doc = this.formBuilder.group({
-        dok_number: new FormControl(),
-        dok_date: new FormControl(),
-        dok_name: new FormControl(),
-        dok_item: this.formBuilder.array([])
-      });
-      
+    private docService:DocumentService, private msgService: MessageService) {
     }
     ngOnInit(){
+      this.doc = this.formBuilder.group({
+        dok_number: this.currentDoc.dok_number,
+        dok_date: this.currentDoc.dok_date,
+        dok_name: this.currentDoc.dok_name,
+        dok_item: this.formBuilder.array([])
+      });
       this.loadData();
+      // track if header is changed
+      this.doc.get('dok_number').statusChanges.subscribe(() =>  (this.doc.get('dok_number').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
+      this.doc.get('dok_date').statusChanges.subscribe(() => (this.doc.get('dok_date').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
+      this.doc.get('dok_name').statusChanges.subscribe(() => (this.doc.get('dok_name').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
+      // track if body is changed
+      this.doc.get('dok_item').statusChanges.subscribe(() => (this.doc.get('dok_item').dirty && this.doc.get('dok_item').valid) ? this.bodyIsEdited = true : this.bodyIsEdited = false)
+
     }
+
     loadData() {
       //get data from internet
       this.route.queryParams.subscribe(params => {
@@ -51,9 +63,45 @@ export class DocumentFormComponent implements OnInit {
           });
         }
       });
+      console.log("id ",this.id);
   }
   get dok_item() {
     return this.doc.controls['dok_item'] as FormArray;
+  }
+  get isEdit() {
+    return this.id ? true : false;
+  }
+  revertHeader() {
+    this.doc.patchValue({
+      dok_number : this.currentDoc.dok_number,
+      dok_name : this.currentDoc.dok_name,
+      dok_date: new Date(this.currentDoc.dok_date)
+    });
+    this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: 'Header dikembalikan ke asal '});
+    this.headerIsEdited = false;
+  }
+  submitHeader() {
+    this.headeriswaiting = true;
+    if (this.id) {
+      // update currentDoc
+      this.currentDoc.dok_name = this.doc.get('dok_name').value;
+      this.currentDoc.dok_number = this.doc.get('dok_number').value;
+      this.currentDoc.dok_date = this.doc.get('dok_date').value;
+
+      this.docService.put<Doc>(this.currentDoc).subscribe(result => {
+        this.currentDoc = result;
+        this.headerIsEdited = false;
+      }, error => console.log(error), () => {
+        this.msgService.add({severity: 'success', summary: 'Success', detail: 'Header berhasil diubah'});
+        this.headeriswaiting = false;
+      });
+    } else {
+      this.docService.post<Doc>(this.doc.value).subscribe(result => {
+        this.id = result.id;
+        this.currentDoc = result;
+        this.headerIsEdited = false;
+      })
+    }
   }
   newFormGroup(): FormGroup {
     return this.formBuilder.group({
@@ -67,7 +115,7 @@ export class DocumentFormComponent implements OnInit {
 
     const myform = this.newFormGroup();
     myform.patchValue(item);
-    console.log('dari form ', item);
+    // console.log('dari form ', item);
     const formArrays = this.dok_item as FormArray;
     formArrays.push(myform);
   }

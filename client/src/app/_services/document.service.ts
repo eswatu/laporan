@@ -28,11 +28,12 @@ export class DocumentService extends BaseService {
     let myurl = this.url + id;
     return this.http.get<Doc>(myurl);
   }
-  override put<T>(item: T): Observable<T> {
-    throw new Error('Method not implemented.');
+  post<Doc>(doc: Doc): Observable<Doc> {
+    return this.http.post<Doc>(this.url, doc);
   }
-  override post<T>(item: T): Observable<T> {
-    throw new Error('Method not implemented.');
+  put<Doc>(doc: any): Observable<Doc> {
+    let myurl = this.url + doc.id;
+    return this.http.put<Doc>(myurl, doc);
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);

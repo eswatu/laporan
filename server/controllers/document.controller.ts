@@ -39,7 +39,7 @@ async function getDocById(req: express.Request, res: express.Response, next: exp
   }
 }
 async function createDoc (req, res, next) {
-  console.log('create called')
+  // console.log('create called')
   console.log('body isinya ', req.body)
   try {
     const doc = await documentService.createDoc(req.body)
@@ -48,7 +48,7 @@ async function createDoc (req, res, next) {
     next(error)
   }
 }
-function updateDocbyId(req: express.Request, res: express.Response, next:express.NextFunction) {
+function updateDocbyId(req, res, next) {
   try {
     if (typeof req.params.id === 'undefined') {
       throw new Error('ID is required')

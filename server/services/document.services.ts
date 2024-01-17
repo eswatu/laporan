@@ -34,16 +34,16 @@ export async function createDoc (data) {
 // update document using data object
 export async function updateDoc (id: string, data: any): Promise<any> {
   try {
-    const doc = await documents.updateOne(
+    const doc = await documents.findOneAndUpdate(
       { _id: id },
       {
         dok_number: data.dok_number,
         dok_date: data.dok_date,
         dok_name: data.dok_name,
         dok_item: data.dok_item
-      }
+      },{returnDocument: 'after'}
     )
-    if (doc.modifiedCount !== 0) { return doc }
+    return doc;
   } catch (error) {
     // console.error(error);
     return error

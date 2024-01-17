@@ -4,7 +4,8 @@
     "header"
     "input-1"
     "input-2"
-    "input-3";
+    "input-3"
+    "input-4";
     row-gap: 4px;
 }
 .inputHeader {
@@ -30,6 +31,12 @@
 }
 .input3 {
     grid-area: input-3;
+}
+.input4 {
+    grid-area: input-4;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(min-content, max-content));
+    column-gap: 8px;
 }
 .group-two {
     display: grid;

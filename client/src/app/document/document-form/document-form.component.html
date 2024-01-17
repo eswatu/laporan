@@ -1,6 +1,7 @@
 <form [formGroup]="doc">
     <div class="group-one">
         <h3>Data Dokumen</h3>
+        <p-toast position="top-left" [life]="2000"></p-toast>
         <div class="input1 inputHeader">
             <label for="dok_number" class="headerLabel">Nomor Dokumen</label>
             <input pInputText pKeyFilter="int" placeholder="Nomor Dokumen (angka)" formControlName="dok_number"
@@ -15,11 +16,18 @@
             <label for="dok_name" class="headerLabel">Perusahaan</label>
             <input pInputText placeholder="PT. XXX" formControlName="dok_name" id="dok_name" class="headerInput">
         </div>
+        <div class="input4 inputHeader" *ngIf="headerIsEdited">
+            <p-button [loading]="headeriswaiting" label="Simpan{{ isEdit ? ' Perubahan' : ''}}" (click)="submitHeader()"></p-button>
+            <p-button label="Batal Ubah" (click)="revertHeader()" severity="danger"></p-button>
+        </div>
     </div>
     <div class="group-two">
         <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newItem()"></p-button>
         <form class="mini" formArrayName="dok_item">
             <h3>Rincian item</h3>
+            <div *ngIf="bodyIsEdited">
+                <p-button label="Simpan{{ isEdit ? ' Perubahan' : ''}} Detil"></p-button>
+            </div>
             <ng-container class="item" *ngFor="let item of dok_item.controls; let i = index" [formGroupName]="i">
                 <!-- item-title -->
                     <h4 class="item-title">item {{ i + 1 }}</h4>
@@ -31,8 +39,8 @@
                 <!-- item-label-catatan -->
                     <label for="{{ 'item_catatan' + i }}" class="item-label-catatan">Catatan tambahan</label>
                 <!-- item-input-catatan -->
-                    <input pInputText placeholder="warna ungu dan kuning" formControlName="item_catatan"
-                    [id]=" 'item_catatan' + i" class="item-input-catatan"/>
+                    <textarea pInputTextarea rows="3" cols="30" placeholder="warna ungu dan kuning" formControlName="item_catatan"
+                    [id]=" 'item_catatan' + i" class="item-input-catatan"></textarea>
                 <!-- item-label-uraian -->
                     <label for="{{ 'item_uraian' + i }}" class="item-label-uraian">Uraian Barang</label>
                 <!-- item-input-uraian -->
@@ -51,13 +59,13 @@
     <div class="card-header">Form Debug Info</div>
     <div class="card-body">
       <div class="card-text">
-        <div><strong>Form value: dok_item</strong></div>
+        <div><strong>Form value: doc</strong></div>
         <div class="help-block">
-            {{ dok_item.value | json }}
+            {{ doc.value | json }}
         </div>
         <div class="mt-2"><strong>Form status:</strong></div>
         <div class="help-block">
-            {{ dok_item.status | json }}
+            {{ doc.status | json }}
         </div>
       </div>
     </div>

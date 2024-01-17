@@ -4,13 +4,16 @@ import { TableModule } from "primeng/table";
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
+import { ToastModule } from "primeng/toast";
+import { InputTextareaModule } from "primeng/inputtextarea"
 
 const materials = [ TableModule,
   PaginatorModule,
   ButtonModule,
   InputTextModule,
-  CalendarModule
-
+  CalendarModule,
+  ToastModule,
+  InputTextareaModule
 ]
 
 @NgModule({
