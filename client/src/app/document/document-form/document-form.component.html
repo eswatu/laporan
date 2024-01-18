@@ -25,31 +25,36 @@
         <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newItem()"></p-button>
         <form class="mini" formArrayName="dok_item">
             <h3>Rincian item</h3>
-            <div *ngIf="bodyIsEdited">
-                <p-button label="Simpan{{ isEdit ? ' Perubahan' : ''}} Detil"></p-button>
-            </div>
-            <ng-container class="item" *ngFor="let item of dok_item.controls; let i = index" [formGroupName]="i">
-                <!-- item-title -->
-                    <h4 class="item-title">item {{ i + 1 }}</h4>
-                <!-- item-label-kode -->
-                    <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
-                <!-- item-input-kode -->
-                    <input pInputText placeholder="cth:item 1" formControlName="item_kode" [id]="'item_kode' + i "
-                    style="text-align: end;" class="item-input-kode"/>
-                <!-- item-label-catatan -->
-                    <label for="{{ 'item_catatan' + i }}" class="item-label-catatan">Catatan tambahan</label>
-                <!-- item-input-catatan -->
-                    <textarea pInputTextarea rows="3" cols="30" placeholder="warna ungu dan kuning" formControlName="item_catatan"
-                    [id]=" 'item_catatan' + i" class="item-input-catatan"></textarea>
-                <!-- item-label-uraian -->
-                    <label for="{{ 'item_uraian' + i }}" class="item-label-uraian">Uraian Barang</label>
-                <!-- item-input-uraian -->
-                    <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"
-                    [id]=" 'item_uraian' + i" class="item-input-uraian"/>
-                    <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
-                        daftar file {{ j }}
-                        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
-                    </div>
+            <ng-container *ngFor="let item of dok_item.controls; let i = index" >
+                <div class="item" [formGroupName]="i">
+                    <!-- item-title -->
+                        <h4 class="item-title">item {{ i + 1 }}</h4>
+                    <!-- item-label-kode -->
+                        <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
+                    <!-- item-input-kode -->
+                        <input pInputText placeholder="cth:item 1" formControlName="item_kode" [id]="'item_kode' + i "
+                        style="text-align: end;" class="item-input-kode"/>
+                    <!-- item-label-catatan -->
+                        <label for="{{ 'item_catatan' + i }}" class="item-label-catatan">Catatan tambahan</label>
+                    <!-- item-input-catatan -->
+                        <textarea pInputTextarea rows="3" cols="30" placeholder="warna ungu dan kuning" formControlName="item_catatan"
+                        [id]=" 'item_catatan' + i" class="item-input-catatan"></textarea>
+                    <!-- item-label-uraian -->
+                        <label for="{{ 'item_uraian' + i }}" class="item-label-uraian">Uraian Barang</label>
+                    <!-- item-input-uraian -->
+                        <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"
+                        [id]=" 'item_uraian' + i" class="item-input-uraian"/>
+                        <!-- Opsional tombol save -->
+                        <div *ngIf="isFormGroupChanged(i)" class="button-item">
+                            <p-button label="Simpan Perubahan" ></p-button>
+                            <p-button label="Batal Ubah Detil" (click)="revertItem(i)" severity="danger"></p-button>
+                        </div>
+
+                        <!-- <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
+                            daftar file {{ j }}
+                            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
+                        </div> -->
+                </div>
             </ng-container>
         </form>
     </div>

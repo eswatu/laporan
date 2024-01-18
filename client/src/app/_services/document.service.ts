@@ -35,6 +35,10 @@ export class DocumentService extends BaseService {
     let myurl = this.url + doc.id;
     return this.http.put<Doc>(myurl, doc);
   }
+  createItem<Item>(item: any): Observable<Item> {
+    let myurl = this.url + 'item/' + item.id;
+    return this.http.post<Item>(myurl, item);
+  }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);
     this.url = `${environment.baseUrl}/doc/`;

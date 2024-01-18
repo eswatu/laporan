@@ -20,7 +20,9 @@ export class DocumentFormComponent implements OnInit {
   headerIsEdited: boolean = false;
   headeriswaiting: boolean = false;
 
-  bodyIsEdited: boolean = false;
+  bodyIsEdited: [boolean] = [false];
+  bodyIsWaiting: boolean = false;
+
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
     private docService:DocumentService, private msgService: MessageService) {
     }
@@ -37,7 +39,7 @@ export class DocumentFormComponent implements OnInit {
       this.doc.get('dok_date').statusChanges.subscribe(() => (this.doc.get('dok_date').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
       this.doc.get('dok_name').statusChanges.subscribe(() => (this.doc.get('dok_name').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
       // track if body is changed
-      this.doc.get('dok_item').statusChanges.subscribe(() => (this.doc.get('dok_item').dirty && this.doc.get('dok_item').valid) ? this.bodyIsEdited = true : this.bodyIsEdited = false)
+      // this.doc.get('dok_item').statusChanges.subscribe(() => (this.doc.get('dok_item').dirty && this.doc.get('dok_item').valid) ? this.bodyIsEdited = true : this.bodyIsEdited = false)
 
     }
 
@@ -71,6 +73,10 @@ export class DocumentFormComponent implements OnInit {
   get isEdit() {
     return this.id ? true : false;
   }
+  isFormGroupChanged(index:number) {
+    const fg = this.dok_item.at(index) as FormGroup;
+    return fg.dirty && fg.valid;
+  }
   revertHeader() {
     this.doc.patchValue({
       dok_number : this.currentDoc.dok_number,
@@ -79,6 +85,22 @@ export class DocumentFormComponent implements OnInit {
     });
     this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: 'Header dikembalikan ke asal '});
     this.headerIsEdited = false;
+  }
+  submitItem(index: number) {
+    if (this.dok_item.at(index).valid) {
+      this.msgService.add({severity: 'info', summary: 'Ubah', detail: `Detil item ${index + 1} disimpan `});
+    }
+  }
+  revertItem(index: number) {
+    const fg = this.dok_item.at(index)
+    fg.patchValue({
+      item_kode: this.currentDoc.dok_item[index].item_kode,
+      item_uraian: this.currentDoc.dok_item[index].item_uraian,
+      item_catatan: this.currentDoc.dok_item[index].item_catatan,
+      item_files: this.currentDoc.dok_item[index].item_files,
+    });
+    this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: `Detil item ${index + 1} dikembalikan ke asal `});
+    fg.markAsPristine();
   }
   submitHeader() {
     this.headeriswaiting = true;
@@ -112,7 +134,6 @@ export class DocumentFormComponent implements OnInit {
     });
   }
   newItem(item: Item = null) {
-
     const myform = this.newFormGroup();
     myform.patchValue(item);
     // console.log('dari form ', item);
