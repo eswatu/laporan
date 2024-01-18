@@ -55,13 +55,13 @@ export async function updateDoc (id: string, data: any): Promise<any> {
 export async function createItemForDoc (id, item) {
   try {
     // save item to docs
-    const doc = await documents.updateOne(
+    const doc = await documents.findOneAndUpdate(
       { _id: id },
       {
         $push: { dok_item: item }
-      }
+      }, {returnDocument: 'after'}
     )
-    if (doc.modifiedCount !== 0) { return doc }
+    return doc;
   } catch (error) {
     // console.error(error);
     return error
@@ -72,14 +72,14 @@ export async function createItemForDoc (id, item) {
 export async function updateItemForDoc(id, item) {
   try {
     // save item to docs
-    const doc = await documents.updateOne(
-      { "dok_item._id" : item.id },
+    const doc = await documents.findOneAndUpdate(
+      { "dok_item._id" : item._id },
       { $set: { "dok_item.$.item_kode": item.item_kode,
                 "dok_item.$.item_uraian": item.item_uraian,
-                "dok_item.$.item_catatan": item.item_catatan } }
+                "dok_item.$.item_catatan": item.item_catatan } },
+      {returnDocument: 'after'}
     )
-    console.log('i updated: ', doc)
-    if (doc.modifiedCount !== 0) { return doc }
+    return doc;
   } catch (error) {
     // console.error(error);
     return error

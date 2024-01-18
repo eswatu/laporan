@@ -77,6 +77,9 @@ export class DocumentFormComponent implements OnInit {
     const fg = this.dok_item.at(index) as FormGroup;
     return fg.dirty && fg.valid;
   }
+  grouphasId(index: number) {
+    return this.currentDoc.dok_item[index]._id ? true : false;
+  }
   revertHeader() {
     this.doc.patchValue({
       dok_number : this.currentDoc.dok_number,
@@ -87,9 +90,45 @@ export class DocumentFormComponent implements OnInit {
     this.headerIsEdited = false;
   }
   submitItem(index: number) {
-    if (this.dok_item.at(index).valid) {
-      this.msgService.add({severity: 'info', summary: 'Ubah', detail: `Detil item ${index + 1} disimpan `});
-    }
+    this.bodyIsWaiting = true;
+    const fg = this.dok_item.at(index) as FormGroup;
+    const detil = <Item>{
+        item_kode:fg.get('item_kode').value,
+        item_catatan:fg.get('item_catatan').value,
+        item_uraian:fg.get('item_uraian').value };                  
+    if (this.currentDoc.dok_item[index]?._id) {
+      detil._id = this.currentDoc.dok_item[index]._id;
+      // update method
+      this.docService.updateItem<Doc>(detil, this.currentDoc.id).subscribe(result => {
+        this.dok_item.clear();
+        console.log('mau lihat isinya ',result);
+          // buat form baru, tambahkan data
+          result.dok_item.forEach((value) => {
+            this.newItem(value);
+          })
+          // store result
+          this.currentDoc = result;
+        }, error => console.log(error)
+        , () => {
+            this.msgService.add({severity: 'success', summary: 'Success', detail: 'Item berhasil diubah'});
+            fg.markAsPristine();
+          })
+      } else {
+        this.docService.createItem<Doc>(detil, this.currentDoc.id).subscribe(result => {
+          this.dok_item.clear();
+            // buat form baru, tambahkan data
+            result.dok_item.forEach((value) => {
+              this.newItem(value);
+            })
+            // store result
+            this.currentDoc = result;
+          }, error => console.log(error)
+          ,  () => {
+              this.msgService.add({severity: 'success', summary: 'Berhasil', detail: 'Item berhasil ditambahkan'});
+              fg.markAsPristine();
+            })
+          }
+          this.bodyIsWaiting = false;
   }
   revertItem(index: number) {
     const fg = this.dok_item.at(index)

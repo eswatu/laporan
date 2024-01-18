@@ -7,7 +7,7 @@ export interface Doc {
 }
 
 export interface Item {
-    id: string;
+    _id: string;
     item_kode: string;
     item_uraian: string;
     item_catatan: string;

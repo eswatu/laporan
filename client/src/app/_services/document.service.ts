@@ -35,9 +35,14 @@ export class DocumentService extends BaseService {
     let myurl = this.url + doc.id;
     return this.http.put<Doc>(myurl, doc);
   }
-  createItem<Item>(item: any): Observable<Item> {
-    let myurl = this.url + 'item/' + item.id;
-    return this.http.post<Item>(myurl, item);
+  // ini untuk create item baru
+  createItem<Doc>(item: any, id: string): Observable<Doc> {
+    let myurl = this.url + 'item/' + id;
+    return this.http.post<Doc>(myurl, item);
+  }
+  updateItem<Doc>(item: any, id: string): Observable<Doc> {
+    let myurl = this.url + 'item/' + id;
+    return this.http.put<Doc>(myurl, item);
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);

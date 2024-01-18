@@ -42,11 +42,11 @@
                     <!-- item-label-uraian -->
                         <label for="{{ 'item_uraian' + i }}" class="item-label-uraian">Uraian Barang</label>
                     <!-- item-input-uraian -->
-                        <input pInputText placeholder="kayu berbentuk kotak" formControlName="item_uraian"
-                        [id]=" 'item_uraian' + i" class="item-input-uraian"/>
+                        <textarea pInputTextarea rows="7" cols="30" placeholder="kayu berbentuk kotak" formControlName="item_uraian"
+                        [id]=" 'item_uraian' + i" class="item-input-uraian"></textarea>
                         <!-- Opsional tombol save -->
                         <div *ngIf="isFormGroupChanged(i)" class="button-item">
-                            <p-button label="Simpan Perubahan" ></p-button>
+                            <p-button label="{{grouphasId(i) ? 'Simpan Perubahan' : 'Tambah Item'}}" [loading]="bodyIsWaiting" (click)="submitItem(i)"></p-button>
                             <p-button label="Batal Ubah Detil" (click)="revertItem(i)" severity="danger"></p-button>
                         </div>
 

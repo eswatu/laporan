@@ -79,6 +79,7 @@
 .item-input-uraian {
     grid-column: 10 / 15;
     grid-row: 2 / 5;
+    align-self: start;
 }
 .button-item {
     grid-column: 1 / 6;
