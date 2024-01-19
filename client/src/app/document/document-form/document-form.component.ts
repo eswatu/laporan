@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentService } from '../../_services/document.service';
 import { Doc, Item } from '../../_models/document.interface';
 import { ActivatedRoute } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-document-form',
@@ -24,7 +24,7 @@ export class DocumentFormComponent implements OnInit {
   bodyIsWaiting: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
-    private docService:DocumentService, private msgService: MessageService) {
+    private docService:DocumentService, private msgService: MessageService, private confirmService: ConfirmationService) {
     }
     ngOnInit(){
       this.doc = this.formBuilder.group({
@@ -78,7 +78,11 @@ export class DocumentFormComponent implements OnInit {
     return fg.dirty && fg.valid;
   }
   grouphasId(index: number) {
-    return this.currentDoc.dok_item[index]._id ? true : false;
+    if (this.currentDoc.dok_item[index]?._id.length > 0) {
+      return true;
+    } else {
+      return false
+    }
   }
   revertHeader() {
     this.doc.patchValue({
@@ -140,6 +144,21 @@ export class DocumentFormComponent implements OnInit {
     });
     this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: `Detil item ${index + 1} dikembalikan ke asal `});
     fg.markAsPristine();
+  }
+  confirmDelete(event: Event, index: number){
+    this.confirmService.confirm({
+      target: event.target as EventTarget,
+      message: 'Yakin mau hapus item ini?',
+      header: 'Konfirmasi',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
+      accept: () => {
+        this.msgService.add({severity: 'info', summary: 'HapusItem', detail: `Item ${index + 1} di hapus`});
+      }, reject: () => {
+        this.msgService.add({severity: 'info', summary: 'Batal Hapus', detail: `Item ${index + 1} batal di hapus`});
+      }
+    })
   }
   submitHeader() {
     this.headeriswaiting = true;

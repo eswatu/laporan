@@ -85,6 +85,20 @@ export async function updateItemForDoc(id, item) {
     return error
   }
 }
+// delete item di dokumen
+// di bagian client nanti jangan lupa konversi _id menjadi id
+export async function deleteItemForDoc(id) {
+  try {
+    // save item to docs
+    const doc = await documents.findOneAndDelete(
+      { "dok_item._id" : id }
+    )
+    return doc;
+  } catch (error) {
+    // console.error(error);
+    return error
+  }
+}
 // add new file for item
 export async function addFileItemForDoc(itemid, file) {
   console.log(file)

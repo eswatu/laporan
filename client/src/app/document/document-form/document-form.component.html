@@ -48,6 +48,7 @@
                         <div *ngIf="isFormGroupChanged(i)" class="button-item">
                             <p-button label="{{grouphasId(i) ? 'Simpan Perubahan' : 'Tambah Item'}}" [loading]="bodyIsWaiting" (click)="submitItem(i)"></p-button>
                             <p-button label="Batal Ubah Detil" (click)="revertItem(i)" severity="danger"></p-button>
+                            <p-button label="Delete ae wes" (click)="confirmDelete($event, i)" severity="danger"></p-button>
                         </div>
 
                         <!-- <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
