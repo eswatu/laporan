@@ -87,18 +87,7 @@ export async function updateItemForDoc(id, item) {
 }
 // delete item di dokumen
 // di bagian client nanti jangan lupa konversi _id menjadi id
-export async function deleteItemForDoc(id) {
-  try {
-    // save item to docs
-    const doc = await documents.findOneAndDelete(
-      { "dok_item._id" : id }
-    )
-    return doc;
-  } catch (error) {
-    // console.error(error);
-    return error
-  }
-}
+
 // add new file for item
 export async function addFileItemForDoc(itemid, file) {
   console.log(file)
@@ -136,12 +125,16 @@ export async function deleteFileItemForDoc(item, fname) {
 // delete item using specified id
 export async function deleteItemId (id) {
   try {
-    const doc = await documents.updateOne(
-      { },
-      { $pull: {"dok_item" : { _id : id }}})
+    console.log('delete called');
+    // save item to docs
+    const res = await documents.findOneAndUpdate(
+      { "dok_item._id" : id },
+      { $pull: {"dok_item": { "_id": id } } },
+      {returnDocument: 'after'} )
+      return res;
   } catch (error) {
     // console.error(error);
-    return error
+    return error;
   }
 }
 

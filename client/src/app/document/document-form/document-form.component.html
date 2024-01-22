@@ -26,9 +26,9 @@
         <form class="mini" formArrayName="dok_item">
             <h3>Rincian item</h3>
             <ng-container *ngFor="let item of dok_item.controls; let i = index" >
-                <div class="item" [formGroupName]="i">
+                <div class="item" [formGroupName]="i" [ngClass]="blinkElem(i)">
                     <!-- item-title -->
-                        <h4 class="item-title">item {{ i + 1 }}</h4>
+                    <p-divider align="left" type="solid" class="item-title"><b>Item {{ i + 1 }}</b></p-divider>
                     <!-- item-label-kode -->
                         <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
                     <!-- item-input-kode -->
@@ -45,12 +45,17 @@
                         <textarea pInputTextarea rows="7" cols="30" placeholder="kayu berbentuk kotak" formControlName="item_uraian"
                         [id]=" 'item_uraian' + i" class="item-input-uraian"></textarea>
                         <!-- Opsional tombol save -->
-                        <div *ngIf="isFormGroupChanged(i)" class="button-item">
-                            <p-button label="{{grouphasId(i) ? 'Simpan Perubahan' : 'Tambah Item'}}" [loading]="bodyIsWaiting" (click)="submitItem(i)"></p-button>
-                            <p-button label="Batal Ubah Detil" (click)="revertItem(i)" severity="danger"></p-button>
-                            <p-button label="Delete ae wes" (click)="confirmDelete($event, i)" severity="danger"></p-button>
-                        </div>
-
+                        <ng-container *ngIf="isFormGroupChanged(i)">
+                            <p-confirmDialog></p-confirmDialog>
+                            <div class="button-item">
+                                <p-button label="{{grouphasId(i) ? 'Simpan Perubahan' : 'Tambah Item'}}" class="button-action"
+                                [loading]="bodyIsWaiting" (click)="submitItem(i)" icon="pi pi-check"></p-button>
+                                <p-button label="Batal Ubah Detil" (click)="revertItem(i)" class="button-action"
+                                severity="warning" icon="pi pi-history"></p-button>
+                                <p-button label="Delete ae wes" (click)="confirmDelete($event, i)" class="button-action"
+                                severity="danger" icon="pi pi-times" *ngIf="grouphasId(i)"></p-button>
+                            </div>
+                        </ng-container>
                         <!-- <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
                             daftar file {{ j }}
                             <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>

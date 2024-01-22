@@ -44,9 +44,9 @@ export class DocumentService extends BaseService {
     let myurl = this.url + 'item/' + id;
     return this.http.put<Doc>(myurl, item);
   }
-  deleteItem<Item>(id: string): Observable<Item> {
+  deleteItem<Doc>(id: string): Observable<Doc> {
     let myurl = this.url + 'item/' + id;
-    return this.http.delete<Item>(myurl);
+    return this.http.delete<Doc>(myurl);
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);

@@ -5,7 +5,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
 import { ToastModule } from "primeng/toast";
-import { InputTextareaModule } from "primeng/inputtextarea"
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DividerModule } from 'primeng/divider';
+
 
 const materials = [ TableModule,
   PaginatorModule,
@@ -13,7 +16,9 @@ const materials = [ TableModule,
   InputTextModule,
   CalendarModule,
   ToastModule,
-  InputTextareaModule
+  InputTextareaModule,
+  ConfirmDialogModule,
+  DividerModule
 ]
 
 @NgModule({

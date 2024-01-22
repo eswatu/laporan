@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentService } from '../../_services/document.service';
 import { Doc, Item } from '../../_models/document.interface';
@@ -9,7 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   selector: 'app-document-form',
   templateUrl: './document-form.component.html',
   styleUrl: './document-form.component.css',
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService]
 })
 export class DocumentFormComponent implements OnInit {
   id : string;
@@ -39,8 +39,6 @@ export class DocumentFormComponent implements OnInit {
       this.doc.get('dok_date').statusChanges.subscribe(() => (this.doc.get('dok_date').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
       this.doc.get('dok_name').statusChanges.subscribe(() => (this.doc.get('dok_name').dirty) ? this.headerIsEdited = true : this.headerIsEdited = false)
       // track if body is changed
-      // this.doc.get('dok_item').statusChanges.subscribe(() => (this.doc.get('dok_item').dirty && this.doc.get('dok_item').valid) ? this.bodyIsEdited = true : this.bodyIsEdited = false)
-
     }
 
     loadData() {
@@ -135,15 +133,15 @@ export class DocumentFormComponent implements OnInit {
           this.bodyIsWaiting = false;
   }
   revertItem(index: number) {
-    const fg = this.dok_item.at(index)
+    const fg = this.dok_item.at(index) as FormGroup;
     fg.patchValue({
-      item_kode: this.currentDoc.dok_item[index].item_kode,
-      item_uraian: this.currentDoc.dok_item[index].item_uraian,
-      item_catatan: this.currentDoc.dok_item[index].item_catatan,
-      item_files: this.currentDoc.dok_item[index].item_files,
+      item_kode: this.currentDoc.dok_item[index]?.item_kode,
+      item_uraian: this.currentDoc.dok_item[index]?.item_uraian,
+      item_catatan: this.currentDoc.dok_item[index]?.item_catatan,
+      item_files: this.currentDoc.dok_item[index]?.item_files,
     });
-    this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: `Detil item ${index + 1} dikembalikan ke asal `});
     fg.markAsPristine();
+    this.msgService.add({severity: 'info', summary: 'Batal Ubah', detail: `Detil item ${index + 1} dikembalikan ke asal `});
   }
   confirmDelete(event: Event, index: number){
     this.confirmService.confirm({
@@ -154,7 +152,18 @@ export class DocumentFormComponent implements OnInit {
       acceptIcon: 'none',
       rejectIcon: 'none',
       accept: () => {
-        this.msgService.add({severity: 'info', summary: 'HapusItem', detail: `Item ${index + 1} di hapus`});
+        this.docService.deleteItem<Doc>(this.currentDoc.dok_item[index]._id).subscribe(result => {
+          if (result.id == this.currentDoc.id && result.dok_item?.length < this.currentDoc.dok_item?.length) {
+            this.dok_item.reset();
+            // buat form baru, tambahkan data
+            result.dok_item.forEach((value) => {
+              this.newItem(value);
+            })
+            // store result
+            this.currentDoc = result;
+            this.msgService.add({severity: 'info', summary: 'HapusItem', detail: `Item ${index + 1} di hapus`});
+          }
+        });
       }, reject: () => {
         this.msgService.add({severity: 'info', summary: 'Batal Hapus', detail: `Item ${index + 1} batal di hapus`});
       }
@@ -207,5 +216,12 @@ export class DocumentFormComponent implements OnInit {
       file_keterangan: new FormControl(''),
     }))
   }
-  
+  blinkElem(index: number) {
+    const div = this.dok_item.at(index) as FormGroup;
+    if (div.valid && div.pristine){
+      return 'blink';
+    } else {
+      return '';
+    }
+  }
 }
