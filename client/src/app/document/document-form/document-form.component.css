@@ -52,6 +52,10 @@ textarea {
     grid-auto-rows: 50px;
     grid-auto-columns: 60px;
 }
+.imageform {
+    width: 1000px;
+}
+
 .item-title {
     grid-column: 1 / 15;
     grid-row: 1 / 2;
@@ -93,11 +97,9 @@ textarea {
     width: 100%;
     height: 50px;
 }
-
 .blink {
     animation: blinking 2s linear;
 }
-
 @keyframes blinking {
     50% { opacity: 0; background-color: rgb(14, 157, 240); }
 }

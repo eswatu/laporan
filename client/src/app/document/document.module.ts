@@ -5,13 +5,15 @@ import { DocumentRoutingModule } from './document-routing.module';
 import { CommonModule } from '@angular/common';
 import { MaterialsDocumentModule } from './materials-document.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DocumentFileFormComponent } from './document-file-form/document-file-form.component';
 
 
 
 @NgModule({
   declarations: [
     DocumentListComponent,
-    DocumentFormComponent
+    DocumentFormComponent,
+    DocumentFileFormComponent,
   ],
   imports: [
     CommonModule,

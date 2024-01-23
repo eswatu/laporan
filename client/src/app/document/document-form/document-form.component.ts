@@ -22,7 +22,7 @@ export class DocumentFormComponent implements OnInit {
 
   bodyIsEdited: [boolean] = [false];
   bodyIsWaiting: boolean = false;
-
+  
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
     private docService:DocumentService, private msgService: MessageService, private confirmService: ConfirmationService) {
     }

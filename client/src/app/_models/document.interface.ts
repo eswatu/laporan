@@ -15,7 +15,7 @@ export interface Item {
 }
 export interface Item_file {
     id: string;
-    file_name: string;
+    file_nama: string;
     file_keterangan: string;
     url: string;
 }

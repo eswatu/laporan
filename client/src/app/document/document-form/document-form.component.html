@@ -60,13 +60,16 @@
                             daftar file {{ j }}
                             <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
                         </div> -->
-                </div>
-            </ng-container>
+                    </div>
+                    <div class="imageform">
+                        <document-file-form [file_items]="this.curretDoc.dok_item[i].file_items"></document-file-form>
+                    </div>
+                </ng-container>
         </form>
     </div>
 </form>
 
-<div class="card bg-light mb-3">
+<!-- <div class="card bg-light mb-3">
     <div class="card-header">Form Debug Info</div>
     <div class="card-body">
       <div class="card-text">
@@ -80,4 +83,4 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->

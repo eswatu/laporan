@@ -8,7 +8,10 @@ import { ToastModule } from "primeng/toast";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DividerModule } from 'primeng/divider';
-
+import { FieldsetModule } from 'primeng/fieldset';
+import { FileUploadModule } from 'primeng/fileupload';
+import { GalleriaModule } from 'primeng/galleria';
+import { AccordionModule } from 'primeng/accordion';
 
 const materials = [ TableModule,
   PaginatorModule,
@@ -18,7 +21,11 @@ const materials = [ TableModule,
   ToastModule,
   InputTextareaModule,
   ConfirmDialogModule,
-  DividerModule
+  DividerModule,
+  FieldsetModule,
+  FileUploadModule,
+  GalleriaModule,
+  AccordionModule  
 ]
 
 @NgModule({

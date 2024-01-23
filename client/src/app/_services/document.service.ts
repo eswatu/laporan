@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../environment';
 
@@ -47,6 +47,10 @@ export class DocumentService extends BaseService {
   deleteItem<Doc>(id: string): Observable<Doc> {
     let myurl = this.url + 'item/' + id;
     return this.http.delete<Doc>(myurl);
+  }
+  getImage(imgName: string): Observable<Blob> {
+    let myurl = this.url + 'image/' + imgName;
+    return this.http.get(myurl, {responseType: 'blob'});
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     super(http, baseUrl);
