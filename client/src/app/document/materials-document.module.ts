@@ -10,8 +10,10 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DividerModule } from 'primeng/divider';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
-import { GalleriaModule } from 'primeng/galleria';
+import { CarouselModule } from 'primeng/carousel';
 import { AccordionModule } from 'primeng/accordion';
+import { ImageModule } from 'primeng/image';
+
 
 const materials = [ TableModule,
   PaginatorModule,
@@ -24,7 +26,8 @@ const materials = [ TableModule,
   DividerModule,
   FieldsetModule,
   FileUploadModule,
-  GalleriaModule,
+  CarouselModule,
+  ImageModule,
   AccordionModule  
 ]
 

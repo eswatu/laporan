@@ -71,6 +71,9 @@ export class DocumentFormComponent implements OnInit {
   get isEdit() {
     return this.id ? true : false;
   }
+  getFileItems(index: number) {
+    return this.currentDoc.dok_item[index].item_files;
+  }
   isFormGroupChanged(index:number) {
     const fg = this.dok_item.at(index) as FormGroup;
     return fg.dirty && fg.valid;

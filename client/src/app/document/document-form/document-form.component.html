@@ -1,4 +1,5 @@
 <form [formGroup]="doc">
+    <!-- group one -->
     <div class="group-one">
         <h3>Data Dokumen</h3>
         <p-toast position="top-left" [life]="2000"></p-toast>
@@ -21,6 +22,7 @@
             <p-button label="Batal Ubah" (click)="revertHeader()" severity="danger"></p-button>
         </div>
     </div>
+    <!-- group two -->
     <div class="group-two">
         <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newItem()"></p-button>
         <form class="mini" formArrayName="dok_item">
@@ -28,7 +30,7 @@
             <ng-container *ngFor="let item of dok_item.controls; let i = index" >
                 <div class="item" [formGroupName]="i" [ngClass]="blinkElem(i)">
                     <!-- item-title -->
-                    <p-divider align="left" type="solid" class="item-title"><b>Item {{ i + 1 }}</b></p-divider>
+                    <p-divider align="left" type="solid" ><b>Item {{ i + 1 }}</b></p-divider>
                     <!-- item-label-kode -->
                         <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
                     <!-- item-input-kode -->
@@ -60,10 +62,8 @@
                             daftar file {{ j }}
                             <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
                         </div> -->
-                    </div>
-                    <div class="imageform">
-                        <document-file-form [file_items]="this.curretDoc.dok_item[i].file_items"></document-file-form>
-                    </div>
+                </div>
+                <document-file-form class="imageform" [file_items]="getFileItems(i)"></document-file-form>
                 </ng-container>
         </form>
     </div>

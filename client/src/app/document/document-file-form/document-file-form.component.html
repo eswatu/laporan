@@ -1,32 +1,21 @@
-<div>
-    <p-fieldset legend="Image" [toggleable]="true" [collapsed]="collapse" [ngClass]="{'expanded' : isExpanded() }">
-        <p-accordion [multiple]="true" [activeIndex]="[0]">
-            <p-accordionTab header="File Upload">
-                <div class="upload-menu">
-                    <p-fileUpload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php"
-                    [multiple]="true" accept="image/*" [maxFileSize]="maxSizeOfFile">
-                        <ng-template pTemplate="content">
-                            <ul *ngIf="uploadedFiles.length">
-                                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-                            </ul>
-                        </ng-template>
-                    </p-fileUpload>
-                </div>
-            </p-accordionTab>
-            <p-accordionTab header="File Viewer">
-                <div class="file-viewer">
-                    <p-galleria [(value)]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '640px'}" [numVisible]="2">
-                        <ng-template pTemplate="item" let-item>
-                            <img [src]="item.src" style="width: 100%;" />
-                        </ng-template>
-                        <ng-template pTemplate="thumbnail" let-item>
-                            <div class="gridss">
-                                <img [src]="item.thumbNailSrc"/>
-                            </div>
-                        </ng-template>
-                    </p-galleria>
-                </div>
-            </p-accordionTab>
-        </p-accordion>
-    </p-fieldset>
-</div>
+<p-fieldset legend="Image" [toggleable]="true" [collapsed]="collapse" [ngClass]="{'expanded' : isExpanded() }">
+    <p-accordion [multiple]="true" [activeIndex]="[0]">
+        <p-accordionTab header="File Upload" class="upload-menu">
+            <p-fileUpload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php"
+            [multiple]="true" accept="image/*" [maxFileSize]="maxSizeOfFile">
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+                    </ul>
+                </ng-template>
+            </p-fileUpload>
+        </p-accordionTab>
+        <p-accordionTab header="File Viewer" *ngIf="file_items.length > 0" class="file-viewer">
+            <p-carousel [value]="images" [numVisible]="3" [numScroll]="3" [circular]="false" [responsiveOptions]="responsiveOptions">
+                <ng-template let-image pTemplate="item">
+                    <p-image [src]="image" [preview]="true"></p-image>
+                </ng-template>
+            </p-carousel>
+        </p-accordionTab>
+    </p-accordion>
+</p-fieldset>

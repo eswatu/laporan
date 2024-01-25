@@ -49,7 +49,7 @@ export class DocumentService extends BaseService {
     return this.http.delete<Doc>(myurl);
   }
   getImage(imgName: string): Observable<Blob> {
-    let myurl = this.url + 'image/' + imgName;
+    let myurl = this.url + 'download/' + imgName;
     return this.http.get(myurl, {responseType: 'blob'});
   }
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
