@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { Item_file } from '../../_models/document.interface';
 import { DocumentService } from '../../_services/document.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { HttpEventType } from '@angular/common/http';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -16,13 +17,13 @@ interface UploadEvent {
 
 export class DocumentFileFormComponent implements OnInit {
   @Input() file_items: Item_file[];
+  @Input() document_id: string;
+  @Input() item_id:string;
+
   images: any[] | undefined;
   responsiveOptions: any[] | undefined;
-  collapse = true;
-  isExpanded(){
-    return this.collapse ? false : true
-  }
-  maxSizeOfFile: number = 1000000;
+
+  maxSizeOfFile: number = 5000000;
   uploadedFiles: any[] = [];
   constructor(private msgService: MessageService,
     private docService: DocumentService,
@@ -31,28 +32,29 @@ export class DocumentFileFormComponent implements OnInit {
     this.loadImgs();
     this.responsiveOptions = [
       {
-          breakpoint: '1199px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 3,
       },
       {
-          breakpoint: '991px',
-          numVisible: 2,
-          numScroll: 1
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 2,
       },
       {
-          breakpoint: '767px',
-          numVisible: 1,
-          numScroll: 1
-      }
+        breakpoint: '560px',
+        numVisible: 1,
+        numScroll: 1,
+      },
   ];
     // console.log(this.file_items);
   }
-  onUpload() {
-    // for(let file of event.files) {
-    //     this.uploadedFiles.push(file);
-    // }
+  onUpload(event:any) {
+   for (let file of event.files) {
+    this.uploadedFiles.push(file);
+   }
   }
+
   loadImgs(){
     this.images = [];
     if (this.file_items.length > 0) {

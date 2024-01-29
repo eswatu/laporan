@@ -172,7 +172,7 @@ export async function downloadFile(req, res) {
   const cfile = bucket.file(req.params.name);
   try {
     const [metaData] = await bucket.file(req.params.name).getMetadata()
-    console.log(metaData)
+    // console.log(metaData)
     const dfile = await cfile.download();
     // Set response headers for the file download
     res.setHeader('Content-Disposition', `attachment; filename=${req.params.name}`);

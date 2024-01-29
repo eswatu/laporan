@@ -1,21 +1,27 @@
-<p-fieldset legend="Image" [toggleable]="true" [collapsed]="collapse" [ngClass]="{'expanded' : isExpanded() }">
-    <p-accordion [multiple]="true" [activeIndex]="[0]">
-        <p-accordionTab header="File Upload" class="upload-menu">
-            <p-fileUpload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php"
-            [multiple]="true" accept="image/*" [maxFileSize]="maxSizeOfFile">
-                <ng-template pTemplate="content">
-                    <ul *ngIf="uploadedFiles.length">
-                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-                    </ul>
-                </ng-template>
-            </p-fileUpload>
-        </p-accordionTab>
-        <p-accordionTab header="File Viewer" *ngIf="file_items.length > 0" class="file-viewer">
-            <p-carousel [value]="images" [numVisible]="3" [numScroll]="3" [circular]="false" [responsiveOptions]="responsiveOptions">
-                <ng-template let-image pTemplate="item">
-                    <p-image [src]="image" [preview]="true"></p-image>
-                </ng-template>
-            </p-carousel>
-        </p-accordionTab>
-    </p-accordion>
-</p-fieldset>
+<p-tabView class="main-container">
+    <!-- file upload -->
+    <p-tabPanel header="Upload File" >
+        <p-fileUpload [multiple]="true" accept="image/*, video/*" [maxFileSize]="maxSizeOfFile"
+        (onUpload)="onUpload($event)" >
+            <ng-template pTemplate="content">
+                <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">
+                        <input type="text" formControlName="ket" id="ket" pInputText />
+                        <div>
+                            {{ file.name }} - {{ file.size }} bytes
+                        </div>
+                        <p-progressBar [value]="file.progress" [style]="{height: '6px', marginTop:'10px'}"></p-progressBar>
+                    </li>
+                </ul>
+            </ng-template>
+        </p-fileUpload>
+    </p-tabPanel>
+    <!-- file view -->
+    <p-tabPanel header="File Viewer" *ngIf="file_items.length > 0">
+        <!-- <p-carousel [value]="images" [numVisible]="3" [numScroll]="1" [circular]="false" [responsiveOptions]="responsiveOptions"> -->
+            <div *ngFor="let item of images">
+                <p-image [src]="item" [preview]="true" width="300"></p-image>
+            </div>
+        <!-- </p-carousel> -->
+    </p-tabPanel>
+</p-tabView>

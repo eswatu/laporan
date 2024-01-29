@@ -72,7 +72,7 @@ export class DocumentFormComponent implements OnInit {
     return this.id ? true : false;
   }
   getFileItems(index: number) {
-    return this.currentDoc.dok_item[index].item_files;
+    return this.currentDoc.dok_item[index]?.item_files;
   }
   isFormGroupChanged(index:number) {
     const fg = this.dok_item.at(index) as FormGroup;

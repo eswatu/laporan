@@ -8,11 +8,11 @@ import { ToastModule } from "primeng/toast";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DividerModule } from 'primeng/divider';
-import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CarouselModule } from 'primeng/carousel';
-import { AccordionModule } from 'primeng/accordion';
 import { ImageModule } from 'primeng/image';
+import { TabViewModule } from 'primeng/tabview';
+
 
 
 const materials = [ TableModule,
@@ -24,11 +24,10 @@ const materials = [ TableModule,
   InputTextareaModule,
   ConfirmDialogModule,
   DividerModule,
-  FieldsetModule,
   FileUploadModule,
   CarouselModule,
   ImageModule,
-  AccordionModule  
+  TabViewModule
 ]
 
 @NgModule({

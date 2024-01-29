@@ -48,6 +48,10 @@ export class DocumentService extends BaseService {
     let myurl = this.url + 'item/' + id;
     return this.http.delete<Doc>(myurl);
   }
+  uploadFile(file: File, id: string, itemid: string): Observable<any> {
+    let myurl = this.url + 'upload/' + id + '/' + itemid;
+    return this.http.post(myurl, file, {reportProgress:true});  
+  }
   getImage(imgName: string): Observable<Blob> {
     let myurl = this.url + 'download/' + imgName;
     return this.http.get(myurl, {responseType: 'blob'});

@@ -47,7 +47,9 @@ textarea {
     width: 100%;
 }
 .mini {
-    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-width: 2000px;
 }
 .item {
     display: grid;
@@ -56,12 +58,12 @@ textarea {
     grid-auto-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
 .imageform {
-    width: 100%;
+    min-height: 300px;
     height: 100%;
 }
 
 .item-title {
-    grid-column: 1 / -1;
+    grid-column: 1 / 5;
     grid-row: 1 / 2;
 }
 .item-label-kode {

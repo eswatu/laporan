@@ -30,7 +30,7 @@
             <ng-container *ngFor="let item of dok_item.controls; let i = index" >
                 <div class="item" [formGroupName]="i" [ngClass]="blinkElem(i)">
                     <!-- item-title -->
-                    <p-divider align="left" type="solid" ><b>Item {{ i + 1 }}</b></p-divider>
+                        <p-divider align="left" type="solid" ><b>Item {{ i + 1 }}</b></p-divider>
                     <!-- item-label-kode -->
                         <label for="{{ 'item_kode' + i }}" class="item-label-kode">Nomor item</label>
                     <!-- item-input-kode -->
@@ -58,11 +58,8 @@
                                 severity="danger" icon="pi pi-times" *ngIf="grouphasId(i)"></p-button>
                             </div>
                         </ng-container>
-                        <!-- <div class="filess" *ngFor="let file of getitem_files(i).controls; let j = index">
-                            daftar file {{ j }}
-                            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text" (click)="newFiles(i)"></p-button>
-                        </div> -->
                 </div>
+                <!-- file viewer container -->
                 <document-file-form class="imageform" [file_items]="getFileItems(i)"></document-file-form>
                 </ng-container>
         </form>
