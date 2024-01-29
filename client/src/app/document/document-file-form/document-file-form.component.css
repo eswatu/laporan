@@ -6,20 +6,17 @@
     max-height: 1200px;
     height: 100%;
 }
-.fileimage {
-    width: 100%;
-    max-width: 1200px;
-}
+
 p-tabPanel {
     height: 450px;
     overflow: hidden;
 }
-p-carousel {
-    height: 1200px;
+.img-viewer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
 }
 p-image {
     width: 100%;
     height: 100%;
     max-width: 100%;
-    overflow: auto;
 }

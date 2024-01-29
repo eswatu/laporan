@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Item_file } from '../../_models/document.interface';
 import { DocumentService } from '../../_services/document.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { HttpEventType } from '@angular/common/http';
+import { DomSanitizer} from '@angular/platform-browser';
+import { FileUpload } from 'primeng/fileupload';
 
-interface UploadEvent {
+interface UploadEvent{
   originalEvent: Event;
   files: File[];
 }
@@ -16,15 +16,16 @@ interface UploadEvent {
 })
 
 export class DocumentFileFormComponent implements OnInit {
+  @ViewChild('uploader') uploader: FileUpload;
   @Input() file_items: Item_file[];
   @Input() document_id: string;
-  @Input() item_id:string;
+  @Input() item_id: string;
 
   images: any[] | undefined;
   responsiveOptions: any[] | undefined;
 
   maxSizeOfFile: number = 5000000;
-  uploadedFiles: any[] = [];
+  uploadedFiles: File[] = [];
   constructor(private msgService: MessageService,
     private docService: DocumentService,
     private sanitizer: DomSanitizer){}
@@ -49,12 +50,24 @@ export class DocumentFileFormComponent implements OnInit {
   ];
     // console.log(this.file_items);
   }
-  onUpload(event:any) {
-   for (let file of event.files) {
-    this.uploadedFiles.push(file);
-   }
+  startUpload(event: any) {
+    if (event.files && event.files.length > 0) {
+      for (let item of event.files) {
+        const formData = new FormData();
+        formData.append('file', item);
+        this.docService.uploadFile(formData, this.document_id, this.item_id).subscribe(res => {
+          console.log(res);
+          this.msgService.add({severity: 'info', summary: 'File Terupload', detail: res.message});
+        }, err => {
+          console.log(err);
+        });
+      }
+    }
   }
-
+  clearInput(){
+    this.uploader.clear();
+    this.uploadedFiles = [];
+  }
   loadImgs(){
     this.images = [];
     if (this.file_items.length > 0) {
@@ -67,11 +80,11 @@ export class DocumentFileFormComponent implements OnInit {
       })
     }
     // init
-    console.log(this.images);
+    // console.log(this.images);
   }
   blobToUrl(blob: Blob) {
     const imageUrl = URL.createObjectURL(blob);
-    console.log('blob-url ', imageUrl);
+    // console.log('blob-url ', imageUrl);
     return  this.sanitizer.bypassSecurityTrustResourceUrl(imageUrl);
   }
 }

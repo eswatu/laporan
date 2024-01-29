@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Observable, forkJoin, map } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../environment';
 
 @Injectable({
@@ -48,9 +48,10 @@ export class DocumentService extends BaseService {
     let myurl = this.url + 'item/' + id;
     return this.http.delete<Doc>(myurl);
   }
-  uploadFile(file: File, id: string, itemid: string): Observable<any> {
+  uploadFile(ufile: FormData, id: string, itemid: string): Observable<any> {
     let myurl = this.url + 'upload/' + id + '/' + itemid;
-    return this.http.post(myurl, file, {reportProgress:true});  
+    const headers = new HttpHeaders();
+    return this.http.post(myurl, ufile, {headers: headers});  
   }
   getImage(imgName: string): Observable<Blob> {
     let myurl = this.url + 'download/' + imgName;

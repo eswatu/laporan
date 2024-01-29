@@ -60,7 +60,8 @@
                         </ng-container>
                 </div>
                 <!-- file viewer container -->
-                <document-file-form class="imageform" [file_items]="getFileItems(i)"></document-file-form>
+                <document-file-form class="imageform" [file_items]="getFileItems(i)" [document_id]="id"
+                [item_id]="this.currentDoc.dok_item[i]._id" ></document-file-form>
                 </ng-container>
         </form>
     </div>

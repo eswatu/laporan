@@ -1,27 +1,24 @@
 <p-tabView class="main-container">
     <!-- file upload -->
-    <p-tabPanel header="Upload File" >
-        <p-fileUpload [multiple]="true" accept="image/*, video/*" [maxFileSize]="maxSizeOfFile"
-        (onUpload)="onUpload($event)" >
+    <p-tabPanel header="Upload File" class="main-panel">
+        <p-fileUpload name="myname" url="" (uploadHandler)="startUpload($event)"
+       [multiple]="true" [customUpload]="true" accept="image/*"
+        [maxFileSize]="maxSizeOfFile" #uploader (onUpload)="clearInput()">
             <ng-template pTemplate="content">
                 <ul *ngIf="uploadedFiles.length">
-                    <li *ngFor="let file of uploadedFiles">
-                        <input type="text" formControlName="ket" id="ket" pInputText />
-                        <div>
-                            {{ file.name }} - {{ file.size }} bytes
-                        </div>
-                        <p-progressBar [value]="file.progress" [style]="{height: '6px', marginTop:'10px'}"></p-progressBar>
-                    </li>
+                    <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
                 </ul>
             </ng-template>
         </p-fileUpload>
     </p-tabPanel>
     <!-- file view -->
-    <p-tabPanel header="File Viewer" *ngIf="file_items.length > 0">
-        <!-- <p-carousel [value]="images" [numVisible]="3" [numScroll]="1" [circular]="false" [responsiveOptions]="responsiveOptions"> -->
-            <div *ngFor="let item of images">
-                <p-image [src]="item" [preview]="true" width="300"></p-image>
+    <p-tabPanel header="File Viewer" *ngIf="file_items.length > 0" class="main-panel">
+        <ng-template pTemplate="content">
+            <div class="img-viewer">
+                <div *ngFor="let item of images" class="img-file">
+                    <p-image [src]="item" [preview]="true" width="300"></p-image>
+                </div>
             </div>
-        <!-- </p-carousel> -->
+        </ng-template>
     </p-tabPanel>
 </p-tabView>
